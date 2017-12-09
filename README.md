@@ -1,6 +1,8 @@
-# vue-cli-tamplate
+# museum
 
 > A Vue.js project
+
+> 文物预防性保护 环境监控系统
 
 
 > 已经集成 vue-router、jquery、element-ui、scss
