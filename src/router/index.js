@@ -1,9 +1,21 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import Router1 from '@/pages/router1'
-import Router2 from '@/pages/router2'
-import Router3 from '@/pages/router3'
+
+// 实时监测
+import RealTimeMonitoring from '@/pages/RealTimeMonitoring/realTimeMonitoring'
+// 环境调控
+import Environmental from '@/pages/Environmental/environmental'
+// 空调调控
+import AirControl from '@/pages/AirConditionControl/airControl'
+// 预警平台 -- 预警统计
+
+import WarningStatistics from '@/pages/WaringPlatform/warningStatistics'
+// 预警平台 -- 预警查询
+import WarningQuery from '@/pages/WaringPlatform/warningQuery'
+
+
+
 
 Vue.use(Router)
 
@@ -14,9 +26,22 @@ export default new Router({
       name: 'Home',
       component: Home,
       children: [
-        { path: 'router1', name: 'router1', component: Router1 },
-        { path: 'router2', name: 'router2', component: Router2 },
-        { path: 'router3', name: 'router3', component: Router3 }
+        { 
+          path: 'RealTimeMonitoring', 
+          name: 'RealTime', 
+          component: RealTimeMonitoring,
+          meta: {
+            title: '实时监测'
+          } 
+        },
+        { 
+          path: 'Environmental', 
+          name: 'Environmental', 
+          component: Environmental,
+          meta: {
+            title: '环境调控'
+          }
+        }
       ]
     }
   ]
