@@ -23,14 +23,15 @@
 <script>
 import generateColors from './utils/color'
 import objectAssign from 'object-assign'
+import axios from 'axios'
 export default {
     data () {
         return {
             colors: {
-                primary: '#409eff'
+                primary: '#365887'
             },
             originalStyle: '',
-            primaryColor: '#409eff',
+            primaryColor: '#365887',
             themeDialogVisible: false
       }
     },
@@ -40,7 +41,7 @@ export default {
         },
         resetTheme () {
             this.themeDialogVisible = false
-            this.colors.primary = '#409eff'
+            this.colors.primary = '#365887'
             this.primaryColor = this.colors.primary
             this.colors = objectAssign({}, this.colors, generateColors(this.colors.primary))
             this.writeNewStyle()
@@ -70,7 +71,7 @@ export default {
         getStyleTemplate (data) {
             const colorMap = {
                 '#3a8ee6': 'shade-1',
-                '#409eff': 'primary',
+                '#365887': 'primary',
                 '#53a8ff': 'light-1',
                 '#66b1ff': 'light-2',
                 '#79bbff': 'light-3',
@@ -88,7 +89,7 @@ export default {
             return data
         },
         getIndexStyle () {
-            this.getFile('//unpkg.com/element-ui/lib/theme-chalk/index.css')
+            axios.get('/static/theme/index.css')
             .then(({ data }) => {
                 // console.log(data)
                 this.originalStyle = this.getStyleTemplate(data)

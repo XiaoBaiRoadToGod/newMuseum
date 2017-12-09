@@ -15,7 +15,7 @@
                         <template slot='title'>
                             <span>导航一</span>
                         </template>
-                        <el-menu-item index='/router1' >
+                        <el-menu-item index='/RealTimeMonitoring' >
                             路由一
                         </el-menu-item>
                         <el-menu-item index='/router2' >
@@ -45,7 +45,10 @@ export default {
 
         }
     },
-    components: { ChangeTheme }
+    components: { ChangeTheme },
+    mounted() {
+        console.log(this.$router.options.routes[0])
+    }
 }
 </script>
 <style lang="scss" scoped>
