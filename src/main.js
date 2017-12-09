@@ -8,13 +8,22 @@ import '../static/theme/index.css'
 // import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/reset.css'
 import 'font-awesome/css/font-awesome.css'
-import ChangeTheme from './components/changeTheme/changeTheme'
+import './assets/css/index.scss'
+import './assets/css/scrollBar.scss'
+// import ChangeTheme from './components/changeTheme/changeTheme'
 // vuex 
 import store from './store/index'
+import axios from 'axios'
+// 使用滚动条组件
+import Vuebar from 'vuebar'
+Vue.use(Vuebar)
+
+Vue.prototype.$http = axios
+axios.defaults.baseURL = 'http://huato.net:8025/api'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-Vue.component('componnent', ChangeTheme)
+// Vue.component('componnent', ChangeTheme)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

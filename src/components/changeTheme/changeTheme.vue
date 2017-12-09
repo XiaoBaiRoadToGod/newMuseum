@@ -65,7 +65,10 @@ export default {
                 const style = document.createElement('style')
                 style.setAttribute('id','testCSS')
                 style.innerText = cssText
-                document.head.appendChild(style)
+                // document.head.insertBefore(style, document.head.children[0])
+                // console.log($('head').children('style'))
+                let appendDom = $('head').children('style')[1]
+                $(appendDom).after(style)
             }
         },
         getStyleTemplate (data) {
@@ -89,7 +92,7 @@ export default {
             return data
         },
         getIndexStyle () {
-            axios.get('/static/theme/index.css')
+            this.getFile('/static/theme/index.css')
             .then(({ data }) => {
                 // console.log(data)
                 this.originalStyle = this.getStyleTemplate(data)
