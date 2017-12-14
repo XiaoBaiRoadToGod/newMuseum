@@ -4,3 +4,9 @@ export const fun = ({commit}, value) => {
         msg: value
     })
 }
+export const comZhantingId = ({commit}, value) => {
+    commit({ 
+        type: "setZhantingId",
+        value: value
+     });
+}
