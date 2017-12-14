@@ -1,15 +1,145 @@
 <template>
-  <el-row>
-      环境调控
+  <el-row class='controlsContainer'>
+    <el-col :span='24' >
+      <el-table
+        :data='controlTableData'
+        stripe
+        center
+        style='width: 100%'>
+        <el-table-column prop='LOGGER_NAME' label='名称'></el-table-column>
+        <el-table-column prop='Device' label='设备类型' min-width='140'></el-table-column>
+        <el-table-column prop='SPosition' label='安装位置'></el-table-column>
+        <el-table-column label='温度 (℃)' min-width='70'>
+          <template slot-scope="scope">
+            <span :style='{color:controlTableData[scope.$index].Tcolor }' >{{ controlTableData[scope.$index].LOGS_CHONE }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label='湿度 (%)'>
+          <template slot-scope="scope">
+            <span :style='{color:controlTableData[scope.$index].Hcolor }' >{{ controlTableData[scope.$index].LOGS_CHTWO }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop='Temperature' label='设置温度(℃)' min-width='94'></el-table-column>
+				<el-table-column prop='Humidity' label='设置湿度(%)' min-width='90'></el-table-column>
+        <el-table-column label='设备状态'> 
+          <template slot-scope="scope">
+            <span :style='{color:controlTableData[scope.$index].StateColor }' >{{ controlTableData[scope.$index].State }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label='液位状态'>
+          <template slot-scope="scope">
+            <img v-bind:src="controlTableData[scope.$index].YiWei" alt="">
+          </template>
+        </el-table-column>
+        <el-table-column label='操作' min-width='140'>
+          <template slot-scope="scope">
+            <el-button type='primary'size='mini' @click='setLoggerState(scope.$index)' >设置</el-button>
+            <el-switch v-model='controlTableData[scope.$index].SwtichMachine' ></el-switch>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-col>
   </el-row>
 </template>
 <script>
+import { Controls, ControlNum } from './api'
+import { mapGetters } from 'vuex'
+import { deviceType, subDotN } from '@/assets/js/commonFunc'
+import component from './showStateComponent'
 export default {
-  
+  data () {
+    return {
+      pageSize: 10,
+      pageIndex: 0,
+      controlTableData: [],
+      dialogStateData: null
+    }
+  },
+  computed: {
+    ...mapGetters(['zhantingId'])
+  },
+  methods: {
+    getDefaultData () {  // 获取页面数据
+      var params = {
+        GroupId: this.zhantingId,
+        pageSize: this.pageSize,
+        pageIndex:this.pageIndex
+      }
+      Controls(params).then(res => {
+        console.log(res)  
+        // 按名称排序
+        res = res.sort((a, b) => {
+          return (a.LOGGER_NAME).localeCompare(b.LOGGER_NAME, 'zh-Hans-CN', {sensitivity: 'accent'})
+        })
+        for(let item of res) {
+          item.Device = deviceType(item.VER_ID)  // 设备类型
+          item.LOGS_CHONE = item.VER_ID == 13 || item.VER_ID == 17 ? '--' : subDotN(1, item.LOGS_CHONE == null ? '--' : item.LOGS_CHONE) //温度
+          item.LOGS_CHTWO = item.VER_ID == 13?subDotN(1,item.LOGS_CHONE==null?'--':item.LOGS_CHONE):subDotN(1, item.LOGS_CHTWO==null?'--':item.LOGS_CHTWO) // 湿度
+          item.Temperature = subDotN(1, item .Temperature==null?'--': item.Temperature)   // 设置温度
+          item.Humidity = item.VER_ID == 13?'--':item.VER_ID == 17?'--':subDotN(1,item.Humidity == null?'--':item.Humidity)   // 设置湿度
+          item.State = this.equipmentState(item.LOGGER_STATE, item.SAMPLING_INT, item.LOGS_TIME)    //设备状态
+          item.StateColor = item.State == '故障' ? 'red' : '#666'                                   // 设备状态颜色
+          // item.MainBlower = item.VER_ID == 12 ? '--' : item.MainBlower                             // 冷凝片状态
+          item.YiWei = this.yeweiImg(item.CompressO)                                // 液位图片
+          item.SwtichMachine = true                                                  // 开关机
+
+
+        }
+        this.controlTableData = res
+        console.log(this.controlTableData)
+      })
+    },
+    setLoggerState (idx) {
+      this.dialogStateData = this.controlTableData[idx]
+    },
+    equipmentState (state, int, logsTime) {    //判断设备状态
+        var shebeiState = ''; // 设备状态
+				var myDate = new Date(); //获取当前时间  时间戳
+				var date1 = new Date(logsTime);
+				var num = myDate.getTime() - date1.getTime(); // 计算出相差毫秒数
+				var seconds = Math.round(num / 1000);
+				if(state == 0){
+					shebeiState = '停止';
+				}else if(state == 1){
+					// console.log('seconds---'+seconds);
+					// console.log('int---'+int);
+					if(seconds > int + 100){
+						// shebeiState = '故障';
+						shebeiState = '运行';
+					}else{
+						shebeiState = '运行';
+					}
+				}
+				return shebeiState;
+    },
+    yeweiImg (value) {
+      if(value == '低') {
+        return '../../../static/img/yeweidi.png'
+      } else if (value == '中') {
+        return '../../../static/img/yeweizhong.png'
+      } else  {
+        return '../../../static/img/yeweigao.png'
+      }
+    }
+  },
+  mounted () {
+    this.getDefaultData()
+  },
+  watch: {
+    zhantingId () {
+      this.getDefaultData()
+    }
+  }
 }
 </script>
-<style lang="sass" scoped>
-
+<style lang="scss" scoped>
+.controlsContainer {
+  .el-table {
+    .el-button {
+      margin-right: 10px;
+    }
+  }
+}
 </style>
 
 

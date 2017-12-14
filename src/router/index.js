@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
+import Login from '@/components/Login'
 
 import RouterView from '@/pages/router-view'
 
@@ -54,110 +55,163 @@ Vue.use(Router)
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'Home',
+      path: "/",
+      name: "Home",
       component: Home,
       children: [
-        { 
-          path: 'RealTimeMonitoring', 
-          name: 'RealTime', 
+        {
+          path: "RealTimeMonitoring",
+          name: "RealTime",
           component: RealTimeMonitoring,
           meta: {
-            title: '实时监测'
-          } 
+            title: "实时监测"
+          }
         },
-        { 
-          path: 'Environmental', 
-          name: 'Environmental', 
+        {
+          path: "Environmental",
+          name: "Environmental",
           component: Environmental,
           meta: {
-            title: '环境调控'
+            title: "环境调控"
           }
         },
         {
-          path: 'AirControl',
-          name: 'AirControl',
+          path: "AirControl",
+          name: "AirControl",
           component: AirControl,
           meta: {
-            title: '空调调控'
+            title: "空调调控"
           }
         },
         {
-          path: 'Warning',
-          name: 'Warning',
+          path: "Warning",
+          name: "Warning",
           component: RouterView,
           meta: {
-            title: '预警平台'
+            title: "预警平台"
           },
           children: [
-            { path: 'WarningStatistics', name: 'WarningStatistics', component: WarningStatistics, meta:{ title: '预警统计'} },
-            { path: 'WarningQuery', name: 'WarningQuery', component: WarningQuery, meta: { title: '预警查询'} }
+            {
+              path: "WarningStatistics",
+              name: "WarningStatistics",
+              component: WarningStatistics,
+              meta: { title: "预警统计" }
+            },
+            {
+              path: "WarningQuery",
+              name: "WarningQuery",
+              component: WarningQuery,
+              meta: { title: "预警查询" }
+            }
           ]
         },
         {
-          path: 'Analysis',
-          name: 'Analysis',
+          path: "Analysis",
+          name: "Analysis",
           component: RouterView,
           meta: {
-            title: '分析评估'
+            title: "分析评估"
           },
           children: [
-            { path: 'HistoryData', name: 'HistoryData', component: HistoryData, meta: { title: '历史数据' } },
-            { path: 'DataAnalysis', name: 'DataAnalysis', component: DataAnalysis, meta: { title: '数据分析' } },
-            { path: 'GroupStatistics', name: 'GroupStatistics', component: GroupStatistics, meta: { title: '分组统计' } },
-            { path: 'Comprehensive', name: 'Comprehensive', component: Comprehensive, meta: { title: '综合评估' } },
-            { path: 'TheMemo', name: 'TheMemo', component: TheMemo, meta: { title: '备忘录' } },
-            { path: 'HeatField', name: 'HeatField', component: HeatField, meta: { title: '热量场' } }
+            {
+              path: "HistoryData",
+              name: "HistoryData",
+              component: HistoryData,
+              meta: { title: "历史数据" }
+            },
+            {
+              path: "DataAnalysis",
+              name: "DataAnalysis",
+              component: DataAnalysis,
+              meta: { title: "数据分析" }
+            },
+            {
+              path: "GroupStatistics",
+              name: "GroupStatistics",
+              component: GroupStatistics,
+              meta: { title: "分组统计" }
+            },
+            {
+              path: "Comprehensive",
+              name: "Comprehensive",
+              component: Comprehensive,
+              meta: { title: "综合评估" }
+            },
+            {
+              path: "TheMemo",
+              name: "TheMemo",
+              component: TheMemo,
+              meta: { title: "备忘录" }
+            },
+            {
+              path: "HeatField",
+              name: "HeatField",
+              component: HeatField,
+              meta: { title: "热量场" }
+            }
           ]
         },
         {
-          path: 'Overview',
-          name: 'Overview',
+          path: "Overview",
+          name: "Overview",
           component: Overview,
           meta: {
-            title: '概览'
+            title: "概览"
           }
         }
       ]
     },
     {
-      path: 'Setting',
-      name: 'Setting',
+      path: "/Setting",
+      name: "Setting",
       component: SettingHome,
       children: [
-        { 
-          path: 'UpdatePass',
-          name: 'UpdatePass',
+        {
+          path: "UpdatePass",
+          name: "UpdatePass",
           component: UpdatePass,
           meta: {
-            title: '修改密码'
+            title: "修改密码"
           }
         },
         {
-          path: 'HiddenLogger',
-          name: 'HiddenLogger',
+          path: "HiddenLogger",
+          name: "HiddenLogger",
           component: HiddenLogger,
           meta: {
-            title: '隐藏仪器'
+            title: "隐藏仪器"
           }
         },
         {
-          path: 'RelicsInfo',
-          name: 'RelicsInfo',
+          path: "RelicsInfo",
+          name: "RelicsInfo",
           component: RelicsInfo,
           meta: {
-            title: '导入文物信息'
+            title: "导入文物信息"
           }
         },
         {
-          path: 'RelicsImg',
-          name: 'RelicsImg',
+          path: "RelicsImg",
+          name: "RelicsImg",
           component: RelicsImg,
           meta: {
-            title: '导入文物图片'
+            title: "导入文物图片"
           }
         }
       ]
+    },
+    {
+      path: "/",
+      redirect: "/RealTimeMonitoring",
+      hidden: true
+    },
+    {
+      path: '/Login',
+      name: 'Login',
+      component: Login,
+      meta:{
+        title: '登录'
+      }
     }
   ]
-})
+});

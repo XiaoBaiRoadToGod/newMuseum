@@ -14,15 +14,30 @@ import './assets/css/scrollBar.scss'
 // vuex 
 import store from './store/index'
 import axios from 'axios'
+import state from './store/rootState'
 // 使用滚动条组件
 import Vuebar from 'vuebar'
 Vue.use(Vuebar)
 
 Vue.prototype.$http = axios
-axios.defaults.baseURL = 'http://huato.net:8025/api'
+// console.log(this.$store)
+axios.defaults.baseURL = state.httpUrl
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
+router.beforeEach((to, from, next) => {
+  console.log(to)
+  if(to.path == '/Login') {
+    sessionStorage.removeItem('user')
+  }
+  let user = JSON.stringify(sessionStorage.getItem('user'))
+  console.log(user == 'null')
+  if(user == 'null' && to.path !== '/Login') {
+    next({ path: "/Login" })
+  } else {
+    next()
+  }
+})
 // Vue.component('componnent', ChangeTheme)
 /* eslint-disable no-new */
 new Vue({

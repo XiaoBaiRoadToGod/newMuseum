@@ -24,16 +24,21 @@
 import generateColors from './utils/color'
 import objectAssign from 'object-assign'
 import axios from 'axios'
+import { mapGetters } from 'vuex'
 export default {
     data () {
         return {
             colors: {
-                primary: '#365887'
+                primary: null
             },
             originalStyle: '',
-            primaryColor: '#365887',
+            // primaryColor: null,
             themeDialogVisible: false
       }
+    },
+    computed: {
+        ...mapGetters(['primaryColor'])
+        
     },
     methods: {
         openThemeDialog () {
@@ -42,13 +47,15 @@ export default {
         resetTheme () {
             this.themeDialogVisible = false
             this.colors.primary = '#365887'
-            this.primaryColor = this.colors.primary
+            this.$store.commit('setPrimaryColor', this.colors.primary)
+            // this.primaryColor = this.colors.primary
             this.colors = objectAssign({}, this.colors, generateColors(this.colors.primary))
             this.writeNewStyle()
         },
         changeThemeFunc () {
             this.themeDialogVisible = false
-            this.primaryColor = this.colors.primary
+            this.$store.commit('setPrimaryColor', this.colors.primary)
+            // this.primaryColor = this.colors.primary
             this.colors = objectAssign({}, this.colors, generateColors(this.colors.primary))
             this.writeNewStyle()
         },
@@ -124,6 +131,10 @@ export default {
     },
     created () {
         this.getIndexStyle()
+        
+    },
+    mounted () {
+        this.colors.primary = this.primaryColor
     }
 }
 </script>

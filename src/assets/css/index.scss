@@ -11,9 +11,14 @@
             }
             
         }
+        .el-menu--horizontal>.el-menu-item.is-active, .el-menu--horizontal>.el-submenu.is-active .el-submenu__title  {
+            background-color: #d7dbde;
+            // border-bottom: none;
+        }
     }
     .mainContainer {
         padding: 20px;
+        background-color: #d7dbde;
     }
 }
 //
@@ -28,3 +33,27 @@
         border-bottom: 1px solid #d5d5d5;
     }
 } 
+// 
+.helpDialog {
+    .el-dialog__header .el-dialog__title{
+        font-size: 20px;
+    }
+    .el-dialog__body {
+        text-align: center;
+        color: #999;
+    }
+} 
+// 表格头部
+.el-table th {
+    background: #ececec;
+    text-align: center;
+    color: #333;
+}
+.el-table td {
+    text-align: center;
+}
+
+// button  按钮  size='mini'
+.el-button--mini, .el-button--mini.is-round {
+    padding: 5px 15px;
+}
