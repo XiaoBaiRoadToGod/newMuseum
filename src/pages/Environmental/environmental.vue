@@ -38,6 +38,7 @@
           </template>
         </el-table-column>
       </el-table>
+      <show-state :stateData='dialogStateData' ref='showstate' />
     </el-col>
   </el-row>
 </template>
@@ -45,7 +46,7 @@
 import { Controls, ControlNum } from './api'
 import { mapGetters } from 'vuex'
 import { deviceType, subDotN } from '@/assets/js/commonFunc'
-import component from './showStateComponent'
+import ShowState from '@/pages/Environmental/showStateComponent'
 export default {
   data () {
     return {
@@ -55,6 +56,7 @@ export default {
       dialogStateData: null
     }
   },
+  components: { ShowState },
   computed: {
     ...mapGetters(['zhantingId'])
   },
@@ -91,6 +93,7 @@ export default {
     },
     setLoggerState (idx) {
       this.dialogStateData = this.controlTableData[idx]
+      this.$refs.showstate.openTheDialog(true)
     },
     equipmentState (state, int, logsTime) {    //判断设备状态
         var shebeiState = ''; // 设备状态

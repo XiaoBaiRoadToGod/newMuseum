@@ -6,6 +6,14 @@
 
 //     })
 // }
+
+// 提示信息
+export const openWarningMessage = (type, msg) => {
+  return this.$messge({
+    type: type,
+    message: msg
+  })
+}
 // 获取设备类型
 export const deviceType = (num) => {
     switch (num) {
@@ -49,3 +57,19 @@ export const subDotN = (n, str) => {
       return "--";
     }
 }
+
+// 选择日期  一天的时间
+export const SevenDay = (date) => {
+  // console.log(date)
+  let today = new Date(date);
+  // console.log(today)
+  today.setHours(0);
+  today.setMinutes(0);
+  today.setSeconds(0);
+  today.setMilliseconds(0);
+  today = today.getTime();
+  let oneday = 1000 * 60 * 60 * 24;
+  // console.log(today );
+  // console.log(oneday)
+  return today - oneday * 6;
+}; 

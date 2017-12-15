@@ -5,7 +5,7 @@
 > 文物预防性保护 环境监控系统   by 华图
 
 
-> 已经集成 vue-router、jquery、element-ui、scss
+> Vue、es6、vue-router、jquery、element-ui、scss、v-charts(基于echarts)
 
 ## Build Setup
 

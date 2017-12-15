@@ -16,7 +16,7 @@ export default {
         this.routerPath = this.$router.options.routes[0].children;
     },
     mounted() {
-        console.log(this.$router.options.routes)
+        // console.log(this.$router.options.routes)
         
     }
 }

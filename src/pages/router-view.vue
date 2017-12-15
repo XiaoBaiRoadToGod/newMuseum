@@ -1,5 +1,5 @@
 <template>
-  <el-row>
-      <router-view/>
-  </el-row>
+
+  <router-view/>
+
 </template>
