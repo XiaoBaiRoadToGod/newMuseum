@@ -6,9 +6,9 @@
         stripe
         center
         style='width: 100%'>
-        <el-table-column prop='LOGGER_NAME' label='名称'></el-table-column>
+        <el-table-column prop='LOGGER_NAME' label='名称' min-width='120'></el-table-column>
         <el-table-column prop='Device' label='设备类型' min-width='140'></el-table-column>
-        <el-table-column prop='SPosition' label='安装位置'></el-table-column>
+        <!-- <el-table-column prop='SPosition' label='安装位置'></el-table-column> -->
         <el-table-column label='温度 (℃)' min-width='70'>
           <template slot-scope="scope">
             <span :style='{color:controlTableData[scope.$index].Tcolor }' >{{ controlTableData[scope.$index].LOGS_CHONE }}</span>
@@ -33,13 +33,24 @@
         </el-table-column>
         <el-table-column label='操作' min-width='140'>
           <template slot-scope="scope">
-            <el-button type='primary'size='mini' @click='setLoggerState(scope.$index)' >设置</el-button>
-            <el-switch v-model='controlTableData[scope.$index].SwtichMachine' ></el-switch>
+            <el-button type="primary" size='mini' @click='setLoggerState(scope.$index)' :disabled="controlTableData[scope.$index].setBtnIsDisable"  >设置</el-button>
+            <el-switch v-model='controlTableData[scope.$index].SwtichMachine' :disabled="controlTableData[scope.$index].switchIsDisable" ></el-switch>
           </template>
         </el-table-column>
       </el-table>
-      <show-state :stateData='dialogStateData' ref='showstate' />
+      <el-col :span='24' class='myPagination'>
+        <el-pagination
+          layout='prev, pager, next'
+          :page-size='pageSize'
+          @current-change='ChangePageIndex'
+          :background='true'
+          :total='pageNum'>
+
+        </el-pagination>
+      </el-col>
+      
     </el-col>
+    <show-state :stateData='dialogStateData' ref='showstate' />
   </el-row>
 </template>
 <script>
@@ -52,6 +63,7 @@ export default {
     return {
       pageSize: 10,
       pageIndex: 0,
+      pageNum: null,
       controlTableData: [],
       dialogStateData: null
     }
@@ -62,6 +74,16 @@ export default {
   },
   methods: {
     getDefaultData () {  // 获取页面数据
+      var numParams = {
+        GroupId:this.zhantingId
+      }
+      ControlNum(numParams).then(res => {  // 获取总条数
+        if(res.length > 0){
+          this.pageNum = res.length
+        } else {
+          this.pageNum = null
+        }
+      })
       var params = {
         GroupId: this.zhantingId,
         pageSize: this.pageSize,
@@ -83,13 +105,66 @@ export default {
           item.StateColor = item.State == '故障' ? 'red' : '#666'                                   // 设备状态颜色
           // item.MainBlower = item.VER_ID == 12 ? '--' : item.MainBlower                             // 冷凝片状态
           item.YiWei = this.yeweiImg(item.CompressO)                                // 液位图片
-          item.SwtichMachine = true                                                  // 开关机
+          item.SwtichMachine = this.isSwitchBtn(item.Switch, item.SwitchState)                  // 开关机
+          item.switchIsDisable = this.switchIsDisable(item.Switch, item.SwitchState)  //开关机按钮是否禁用
+          item.setBtnIsDisable = this.setBtnIsDisable(item.VER_ID)            // 设置按钮是否禁用
 
 
         }
         this.controlTableData = res
         console.log(this.controlTableData)
       })
+    },
+    setBtnIsDisable (num) {   // 设置按钮是否禁用
+      var user = JSON.parse(sessionStorage.getItem('user'));
+				var name = user.level;
+				console.log(name);
+				if(num == 14  || name !== 120 ){ // 设备类型等于 14  或者用户权限 !== 120 不可操作
+					return true;
+				}else{
+					return false;
+				}
+    },
+    switchIsDisable (switchNum, switchState) {   // 判断开关机按钮是否禁用
+      var user = JSON.parse(sessionStorage.getItem('user'));
+				// console.log(user);
+      var name = user.level;
+      if(name == 120){    // 用户权限是 120 可以操作
+        if(switchNum == 0){
+          if(switchState == 0){
+            return false;
+          }else{
+            return true;  // 开机当中不可操作
+          }
+        }else if(switchNum == 1){
+          if(switchState == 0){
+            return false;
+          }else{
+            return true;   // 关机当中不可操作
+          }
+        }
+      }else{  // 用户权限不是120， 不可操作
+        return true;
+      }
+    },
+    isSwitchBtn (switchNum, switchState) {   //判断开关机
+      if(switchNum == 0){
+        if(switchState == 0){
+          return false;        // 0,0关机
+        }else{
+          return false;        // 0,1 关机当中
+        }
+      }else if(switchNum == 1){
+        if(switchState == 0){   // 1,0
+          return true;
+        }else{
+          return true;
+        }
+      }
+    },
+    ChangePageIndex (index) {
+      this.pageIndex = index - 1
+      this.getDefaultData()
     },
     setLoggerState (idx) {
       this.dialogStateData = this.controlTableData[idx]
@@ -130,6 +205,7 @@ export default {
   },
   watch: {
     zhantingId () {
+      this.pageIndex = 0
       this.getDefaultData()
     }
   }

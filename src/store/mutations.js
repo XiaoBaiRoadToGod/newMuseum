@@ -11,3 +11,6 @@ export const setLoggerSn = (state, value) => {
 export const setPrimaryColor = (state, value) => {
     state.PrimaryColor = value
 }
+export const setDate = (state, date) => {
+    state.loggerDate = date;
+}

@@ -4,7 +4,7 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
-import '../static/theme/index.css'
+import './assets/theme/index.css'
 // import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/reset.css'
 import 'font-awesome/css/font-awesome.css'
@@ -12,6 +12,7 @@ import './assets/css/index.scss'
 import './assets/css/scrollBar.scss'
 // import ChangeTheme from './components/changeTheme/changeTheme'
 // 图表
+
 import VeLine from 'v-charts/lib/line'  // 折线
 import VeBar from 'v-charts/lib/bar'     // 条形图
 import VePie from 'v-charts/lib/pie'     // 饼图

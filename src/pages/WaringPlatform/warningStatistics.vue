@@ -1,23 +1,26 @@
 <template>
   <el-row class='warningStaContainer' >
       <el-col :span='24' >
-        <TitleDate type='statistic' :data='warningSelect' @changeSelects='changeSelectData' @changeDate='changeDates' />
+        <TitleDate type='statistic' :data='warningSelect' @clickQueryBtn='queryData' @changeSelects='changeSelectData' @changeDate='changeDates' />
       </el-col>
       <el-col :span='24' class='waringContent'>
-        <!-- <ve-line :data='chartData' :settings='chartDataSet' ></ve-line> -->
-        <el-col :span='11' class='chartContent leftChart'>
-          <p class='chartTitle'>实时报警比例统计图</p>
-          <ve-ring :data='pieChartData' legend-position='top' :title='pieTitle' ></ve-ring>
-        </el-col>
-        <el-col :span='11' class='chartContent '>
-          <el-col :span='24' style='height:50%'>
-            <p class='chartTitle'>报警处理情况</p>
-            <ve-bar :data='barChartData' height='100%' :grid='grid' :title='barChartTitle' :legend-visible='false'></ve-bar>
+        <el-row type="flex" justify="space-around" style='height: 100%' >
+          <el-col :span='11' class='chartContent leftChart'>
+            <p class='chartTitle'>实时报警比例统计图</p>
+            <ve-ring :data='pieChartData' legend-position='top' :title='pieTitle' ></ve-ring>
           </el-col>
-          <el-col :span='24'>
-            
+          <el-col :span='11' class='chartContent '>
+            <el-col :span='24' class='rightWarning'>
+              <p class='chartTitle'>报警处理情况</p>
+              <ve-bar :data='barChartData' :settings='barSetting' height='calc(100% - 30px)' :grid='grid' :title='barChartTitle' :legend-visible='false'></ve-bar>
+            </el-col>
+            <el-col :span='24' class='rightWarning bottomLineWarning'>
+              <p class='chartTitle'>24小时报警曲线图</p>
+              <ve-line :data='LineChartData' height='calc(100% - 30px)'  :settings='LineChartDataSet' :grid='grid' :legend-visible='false'></ve-line>
+            </el-col>
           </el-col>
-        </el-col>
+        </el-row>
+        
       </el-col>
   </el-row>
 </template>
@@ -40,28 +43,26 @@ export default {
       },
       alermType: 1,  //报警类型  默认为1
       date: null,
-      chartData: {
-        columns: ['日期', '成本', '利润', '占比', '其他'],
-        rows: [
-          { '成本': 1523, '日期': '1月1日', '利润': 1523, '占比': 0.12, '其他': 100 },
-          { '成本': 1223, '日期': '1月2日', '利润': 1523, '占比': 0.345, '其他': 100 },
-          { '成本': 2123, '日期': '1月3日', '利润': 1523, '占比': 0.7, '其他': 100 },
-          { '成本': 4123, '日期': '1月4日', '利润': 1523, '占比': 0.31, '其他': 100 },
-          { '成本': 3123, '日期': '1月5日', '利润': 1523, '占比': 0.12, '其他': 100 },
-          { '成本': 7123, '日期': '1月6日', '利润': 1523, '占比': 0.65, '其他': 100 }
-        ]
+      LineChartData: {
+        columns: ['时间', '数量'],
+        rows: []
       },
-      chartDataSet: {
-        metrics: ['成本', '利润'],
-        dimension: ['日期']
+      LineChartDataSet: {
+        metrics: [ '数量'],
+        dimension: ['时间']
+      },
+      LinexAxis: {
+        type: 'category',
+        splitNumber: 6,
+        splitLine:{show:false},
+				boundaryGap:true,
       },
       barChartData: {
-        columns: ['类型','num'],
-        rows: [
-          {'类型': '未处理报警', 'num': 6},
-          {'类型': '已处理报警', 'num': 8},
-          {'类型': '报警总个数', 'num': 10}
-        ]
+        columns: ['type','数量'],
+        rows: []
+      },
+      barSetting:{
+        min: [4]
       },
       barChartTitle: {
         text: '单位:个',
@@ -75,14 +76,12 @@ export default {
       },
       grid: {
         top: '20',
-        bottom: '20'
+        right: '20',
+        bottom: '0'
       },
       pieChartData:{
         columns: ['type', 'value'],
-        rows:[
-          {"type": '温度','value': 4},
-          {"type": '湿度', 'value': 5}
-        ]
+        rows:[]
       },
       pieTitle: {
         text: '总数量',
@@ -111,10 +110,27 @@ export default {
       }
       warningStatistical(params).then(res => {
         console.log(res)
+        this.barChartData.rows = []
+        for(let item of res) {
+          this.barChartData.rows.push({
+            'type': item.group,
+            '数量': item.value
+          })
+        }
       })
       let PieParams = { groupID:this.zhantingId }
       warningBar(PieParams).then(res => {
         console.log(res)
+        this.pieChartData.rows = []
+        let synNumber = 0
+        for(let item of res) {
+          synNumber += item.value
+          this.pieChartData.rows.push({
+            type: item.name,
+            value: item.value
+          })
+        }
+        this.pieTitle.subtext = synNumber + '条'
       });
       let curveParams = {
         groupID: this.zhantingId,
@@ -124,7 +140,19 @@ export default {
       }
       warningCurve(curveParams).then(res => {
         console.log(res)
+        this.LineChartData.rows = []
+        let dateArray= ['00:00', '02:00',  '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00']
+        for(let i = 0; i < res.length; i++) {
+          // console.log(dateArray[i])
+          this.LineChartData.rows.push({
+            '时间': dateArray[i],
+            '数量': res[i].value
+          })
+        }
       })
+    },
+    queryData () {
+      this.getPieData()
     },
     changeSelectData (value) {
       // console.log(value)
@@ -137,6 +165,11 @@ export default {
   },
   mounted () {
     this.getPieData()
+  },
+  watch:{
+    zhantingId () {
+      this.getPieData()
+    }
   }
 }
 </script>
@@ -149,19 +182,29 @@ export default {
     
     .chartContent {
       height: 100%;
-      border: 1px solid #ccc;
-      background: #fff;
+      
       .chartTitle {
         height: 30px;
         line-height: 30px;
         color: #666;
         background: #f5f5f5;
         text-align: center;
+        margin:0;
+      }
+      .rightWarning {
+        height: calc(50% - 10px);
+        background: #fff;
+        border: 1px solid #ccc;
+      }
+      .bottomLineWarning {
+        margin-top: 20px;
       }
     }
   }
   .leftChart {
     margin-right: 20px;
+    background: #fff;
+    border: 1px solid #ccc;
   }
   
   

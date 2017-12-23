@@ -34,7 +34,11 @@ export default {
            UserLogin(params).then(res => {
                console.log(res)
                if(res.ok) {
-                   const user = JSON.stringify({ name: res.ok[0].USER_NAME, ids: res.ok[0].USER_GROUP_IDS})
+                   const user = JSON.stringify({
+                        name: res.ok[0].USER_NAME, 
+                        ids: res.ok[0].USER_GROUP_IDS, 
+                        level: res.ok[0].USER_LEVEL     // 用户的权限
+                    })
                    sessionStorage.setItem('user', user)
                    this.$router.push('/RealTimeMonitoring')
                }

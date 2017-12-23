@@ -8,8 +8,8 @@
 // }
 
 // 提示信息
-export const openWarningMessage = (type, msg) => {
-  return this.$messge({
+export const openWarningMessage = (type, msg, _this) => {
+  return _this.$message({
     type: type,
     message: msg
   })
@@ -73,3 +73,48 @@ export const SevenDay = (date) => {
   // console.log(oneday)
   return today - oneday * 6;
 }; 
+
+// 格式化时间 年月日时分
+export const timeFormatter = (value) => {
+  let date = new Date(value)
+  return date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " + date.getHours() + ":" + date.getMinutes();
+}
+
+
+// 去除设备的类型
+export const analysisSn = (str) => {
+  var reg = /(\w*)\/(\d*)/;
+  var sn = str.match(reg);
+  // console.log(sn);
+  if (sn !== null) {
+    return { sn: sn[1], verId: sn[2] };
+  }
+
+  return false;
+}
+
+
+// 获取数组的最大值
+export const arrayMax = (arr) => {
+  var max = arr[0] == "-" ? 0 : arr[0];
+  for (var i = 1; i < arr.length; i++) {
+    if (max < Number(arr[i])) {
+      max = Number(arr[i]);
+    }
+  }
+  // console.log(max)
+  return max;
+}
+
+
+// 获取最小值
+export const arrayMin = (arr) => {
+  var min = arr[0] == "-" ? 101 : arr[0];
+  for (var i = 1; i < arr.length; i++) {
+    if (min > Number(arr[i])) {
+      min = Number(arr[i]);
+    }
+  }
+  console.log(min)
+  return min;
+}

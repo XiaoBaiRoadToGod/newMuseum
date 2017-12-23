@@ -1,5 +1,5 @@
 {
-  "name": "vue-clitamplate",
+  "name": "environmental-monitoring-system-for-the-protection-of-cultural-relics",
   "version": "1.0.0",
   "description": "A Vue.js project",
   "author": "ZjVirus <285857527@qq.com>",
@@ -25,6 +25,7 @@
     "v-charts": "^1.13.3",
     "vue": "^2.5.2",
     "vue-router": "^3.0.1",
+    "vue-scroll": "^2.1.6",
     "vuebar": "^0.0.17",
     "vuex": "^3.0.1"
   },

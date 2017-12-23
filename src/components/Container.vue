@@ -45,7 +45,7 @@
                                     <span>展厅</span>
                                 </template>
                                 <el-menu-item v-for='item in zhantingList[0]' :key='item.GROUP_ID' :index='String(item.GROUP_ID)' >
-                                    {{ item.GROUP_NAME }} {{ defaultActive}}
+                                    {{ item.GROUP_NAME }} 
                                 </el-menu-item>
                             </el-submenu>
                             <el-submenu v-if='zhantingList[1]' index='2'>
@@ -76,7 +76,7 @@
                 router
                 :default-active='routePath.path + "/" + routePath.children[0].path'
                     >
-                    <el-menu-item v-for='(item, idx) in routePath.children' 
+                    <el-menu-item v-for='item in routePath.children' 
                     router
                     :key='routePath.path + "/" + item.path'
                     :index='routePath.path + "/" + item.path' 
@@ -86,10 +86,10 @@
                 </el-menu>
             </el-aside>
             
-            <el-main>
-                <el-col :span='24' class='navMenuContainer' v-if='type == "home"'>
+            <el-main v-bar style='height: 100%' ref='homeBar' @scroll='windowScroll'>
+                <div>
+                    <el-col :span='24' class='navMenuContainer' v-if='type == "home"'>
                     <el-menu
-                        
                         :default-active='menuDefaultAutive'
                         text-color='#333'
                         unique-opened
@@ -101,20 +101,25 @@
                                 <template slot='title'>
                                     <span>{{item.meta.title}}</span>
                                 </template>
-                                <el-menu-item v-for='childItem in item.children' :index="'/' + item.path + '/' + childItem.path" :key='childItem.path' >
+                                <el-menu-item  v-for='childItem in item.children' 
+                                :index="'/' + item.path + '/' + childItem.path" 
+                                :key='childItem.path' 
+                                v-if='!childItem.isHidden'>
                                     {{ childItem.meta.title }}
                                 </el-menu-item>
                             </el-submenu>
-                            <el-menu-item v-if='item.children == undefined' :key='idx' :index="'/' + item.path">
+                            <el-menu-item v-if='item.children == undefined ' :key='idx' :index="'/' + item.path">
                                 {{ item.meta.title }}
                             </el-menu-item>
                         </template>
                 
                     </el-menu>
                 </el-col>
-                <el-col :span='24' class='mainContainer' :style='{ height: type == "home" ? "calc(100% - 50px)" : "100%"}'>
-                    <router-view></router-view>
+                <el-col :span='24' class='mainContainer' :class='{homeMain: type == "home", setMain: type !== "home"}' >
+                    <router-view @windowReset='windowResets'></router-view>
                 </el-col>
+                </div>
+                
                 
             </el-main>
             <helpDialog ref='openHelp'/>
@@ -135,7 +140,9 @@ export default {
             ids: null,
             zhantingList: [],
             defaultActive: '',
-            menuDefaultAutive: ''
+            menuDefaultAutive: '',
+            screenWidth: new Date().getTime(),    // 监听窗口变化，默认值 时间戳 
+            timer: false
         }
     },
     components: { ChangeTheme, helpDialog },
@@ -173,10 +180,11 @@ export default {
             })
             let _this = this
             zhantingList(params).then(res => {
-                // console.log(res)
+                console.log(res)
                 this.zhantingList = []
                 // 概览页面  名字
                 let overViewName = []
+                
                 Object.keys(res).forEach((key) => {
                     _this.zhantingList.push(res[key])
                     for( let i = 0; i < res[key].length; i++ ) {
@@ -186,13 +194,14 @@ export default {
                 })
                 // console.log(this.zhantingList)
                 if(this.zhantingList[0].length !== 0) {
-                    this.defaultActive = JSON.stringify(this.zhantingList[0][0].GROUP_ID);
+                    this.defaultActive = String(this.zhantingList[0][0].GROUP_ID);
                 } else if(this.zhantingList[1].length !== 0) {
-                    this.defaultActive = JSON.stringify(this.zhantingList[1][0].GROUP_ID);
+                    this.defaultActive = String(this.zhantingList[1][0].GROUP_ID);
                 }else if(this.zhantingList[2].length !== 0) {
-                    this.defaultActive = JSON.stringify(this.zhantingList[2][0].GROUP_ID);
+                    this.defaultActive = String(this.zhantingList[2][0].GROUP_ID);
                 }
-                this.defaultActive = String(this.defaultActive)
+                this.defaultActive = this.defaultActive
+                this.$store.commit('setZhantingId', this.defaultActive )
                 // console.log(this.defaultActive)
             })
         },
@@ -213,28 +222,68 @@ export default {
                     }
                 }
             }
+        },
+        windowResets () {
+            // console.log('---')
+            let height = $(document.body).height()
+            console.log(height)
+            $('.mainContainer').height(height - 160)
+        },
+        windowScroll (event) {
+            console.log('scroll')
+            console.log(event)
         }
     },
     mounted () {
         // console.log(this.type)
+        const that = this
+        window.onresize = () => {
+            return (() => {
+                console.log(new Date().getTime())
+                window.screenWidth = new Date().getTime()
+                that.screenWidth = window.screenWidth
+            })()
+        }
+        let homeBox = this.$refs['homeBar']
+        window.addEventListener('scroll', () => {
+            console.log('scroll')
+        },false)
+        console.log(this.$vuebar.getState($('.vb')))
         if(this.type == 'home') {
             this.menuDefaultAutive = '/' + this.routePath[0].path   // 导航菜单默认打开
             let user = JSON.parse(sessionStorage.getItem('user'))
             this.ids = user.ids
             this.getZhantingList()
             this.getMenuFouc()
+            
+        } else {
+           
         }
         
         // console.log(sessionStorage.getItem('user'))
         
         // console.log(this.routePath)
 
+    },
+    watch: {
+        screenWidth (val) {
+            if(!this.timer) {
+                this.screenWidth = val
+                this.timer = true
+                let that = this
+                setTimeout(() => {
+                    that.windowResets()
+                    that.timer = false
+                }, 0);
+            }
+        }
     }
 }
 </script>
 <style lang="scss" scoped>
 .el-container {
     height: 100%;
+    min-width: 1366px;
     .el-header{
         // background-color: #B3C0D1;
         color: #fff;
@@ -290,6 +339,18 @@ export default {
             .el-submenu .el-menu-item {
                 background: #dadde3;
             }
+        }
+    }
+    .el-main {
+        .homeMain {  // home页面的main高度
+            height: calc(100% - 51px);
+            // height: auto;
+            min-height: 627px;
+        }
+        .setMain { // 设置页面的main高度
+            height: 100%;
+            min-height: 678px;
+            
         }
     }
     .el-footer  {

@@ -1,3 +1,10 @@
+// index.html
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
 // home页面
 .el-main {
     padding: 0;
@@ -17,7 +24,7 @@
         }
     }
     .mainContainer {
-        padding: 20px;
+        padding: 10px 20px;
         background-color: #d7dbde;
     }
 }
@@ -56,4 +63,34 @@
 // button  按钮  size='mini'
 .el-button--mini, .el-button--mini.is-round {
     padding: 5px 15px;
+}
+
+// 分页
+.myPagination {
+    height: 32px;
+    line-height: 32px;
+    margin: 10px 0;
+    // background: #eff3f8;
+    .el-pagination {
+        float: right;
+    }
+}
+
+// 环境调控页面  弹窗
+.showStateContainer {
+    .el-dialog__wrapper .el-dialog {
+        .el-dialog__header {
+            border-bottom: 1px solid #ccc;
+        }
+    }
+}
+
+// 数据分析页面
+.loggerTitle .el-form-item .el-form-item__label {
+    vertical-align: top;
+}
+
+//  日期框宽度
+.el-date-editor--daterange.el-input, .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
+    width: 310px;
 }

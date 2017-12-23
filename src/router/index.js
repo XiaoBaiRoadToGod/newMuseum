@@ -24,6 +24,8 @@ import DataAnalysis from '@/pages/AnalysisEvaluation/DataAnalysis/dataAnalysis'
 // 分组统计
 import GroupStatistics from '@/pages/AnalysisEvaluation/GroupStatistics/groupingStatistics'
 // 平均值
+import MeavValue from "@/pages/AnalysisEvaluation/GroupStatistics/meavValue";
+
 
 // 综合评估
 import Comprehensive from '@/pages/AnalysisEvaluation/Comprehensive/comprehensive'
@@ -132,6 +134,13 @@ export default new Router({
               meta: { title: "分组统计" }
             },
             {
+              path: "/MeavValue/:id",
+              name: "MeavValue",
+              component: MeavValue,
+              isHidden: true,
+              meta: { title: '平均值' }
+            },
+            {
               path: "Comprehensive",
               name: "Comprehensive",
               component: Comprehensive,
@@ -206,11 +215,11 @@ export default new Router({
       hidden: true
     },
     {
-      path: '/Login',
-      name: 'Login',
+      path: "/Login",
+      name: "Login",
       component: Login,
-      meta:{
-        title: '登录'
+      meta: {
+        title: "登录"
       }
     }
   ]

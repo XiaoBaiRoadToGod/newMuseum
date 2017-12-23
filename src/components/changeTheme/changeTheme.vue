@@ -81,7 +81,7 @@ export default {
         getStyleTemplate (data) {
             const colorMap = {
                 '#3a8ee6': 'shade-1',
-                '#365887': 'primary',
+                '#409eff': 'primary',
                 '#53a8ff': 'light-1',
                 '#66b1ff': 'light-2',
                 '#79bbff': 'light-3',
@@ -100,6 +100,7 @@ export default {
         },
         getIndexStyle () {
             this.getFile('/static/theme/index.css')
+            // this.getFile('//unpkg.com/element-ui/lib/theme-chalk/index.css')
             .then(({ data }) => {
                 // console.log(data)
                 this.originalStyle = this.getStyleTemplate(data)

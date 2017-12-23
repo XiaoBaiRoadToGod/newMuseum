@@ -578,11 +578,11 @@ export default {
         width: 170px;
         position: absolute;
         right: -20px;
-        top: -20px;
+        top: -10px;
         display: inline-block;
         padding: 10px 12px;
         padding-top: 20px;
-        height: calc(100% - 10px);
+        height: calc(100% - 20px);
         vertical-align: top;
         background-color: #e9edf2;
         .textAlignCenFFF {
