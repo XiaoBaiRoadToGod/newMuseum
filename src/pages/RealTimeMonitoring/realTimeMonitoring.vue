@@ -1,7 +1,7 @@
 <template>
     <el-row class='realTimeContainer'>
-        <el-col :span='24' class='content'>
-            <div class='ListContainer' v-if='!showList'>
+        <el-col :span='24' class='content'  >
+            <div class='ListContainer' v-if='!showList && !isNotData'>
                 <img :src="rela_img" alt="" class='ListBackImg' @click='clickHideDetails'>
                 <div v-for='(item, idx) in items' :key='idx' class='LoggerContent' :style="{top:item.Top+'%',left:item.Left+'%'}">
                     <img :src="item.UulIng" @click='clickHideDetails(idx)' v-if='item.iconShow' alt="" class='LoggerIcon' :style='{width:item.isHengwen?"48px":"24px"}'>
@@ -204,14 +204,16 @@
                     </div>
                 </div>
             </div>
-            <div class='switchContainer'>
+            <div class='switchContainer' v-if='!isNotData'>
                 <el-switch
                 v-model="showList"
                 active-text="列表"
                 inactive-text="分布图">
                 </el-switch>
             </div>
+            <el-col :span='15' v-if='isNotData' class='isNotDataText' style='float: left' >暂无数据</el-col>
         </el-col>
+        
     </el-row>
 </template>
 <script>
@@ -224,6 +226,7 @@ export default {
             rela_img: '',
             showDetails: false,
             showList: true,
+            isNotData: false,
             evalQualityScore: null,    // 质量评估
             monitoringPoint: null,     // 监测点统计
             monitoringPointNum: null,   // 监测点统计共几台
@@ -242,61 +245,67 @@ export default {
     methods: {
        getDataAll () {
            let params = { GROUP_ID: this.zhantingId }
-           this.items = []
+           
            GetDeviceInfo(params).then(res => {
+               this.items = []
                console.log(res);
-                let data = res.sort((a, b) => {   // 按名字排序
-                    return (a[0].localeCompare(b[0], 'zh-Hans-CN', {sensitivity: 'accent'}))
-                })
-                console.log(data);
-                for(let item of data) {
-                    // console.log(key)
-                    // console.log(item)
-                    this.rela_img = item[23]  // 背景图片
-                    let shebeiNumber;
-                    if(item[1] !== null && item[2] !== null && item[3] !== null && item[4] !== null ) {
-                        shebeiNumber = 4
-                    } else if (item[1] !== null && item[2] !== null && item[3] !== null) {
-                        shebeiNumber = 3
-                    } else if (item[1] !== null && item[2] !== null ) {
-                        shebeiNumber = 2
-                    } else {
-                        shebeiNumber = 1
-                    }
-                    // 是否是恒温恒湿机
-                    let isHengwen
-                    // let isHengwen = item[13].indexOf('恒温恒湿机') >= 0
-                    item[13] == null ? isHengwen = false : isHengwen = item[13].indexOf('恒温恒湿机') >= 0
-
-                    this.items.push({
-                        Name: item[0],
-                        UulIng: item[13],
-                        UingElecT: item[22],
-                        Top: (Number(item[11])+Number(item[12])) * 50,
-                        Left: (Number(item[9])+Number(item[10])) * 50,
-                        Tmp: item[1],
-                        Huid: item[2],
-                        Songd: item[3],
-                        Uaug: item[4],
-                        Tmp_Unit: item[5],
-                        Huid_Unit:item[6],
-                        Songd_Unit: item[7],
-                        Uaug_Unit: item[8],
-                        color1: item[14],
-                        color2: item[15],
-                        color3:item[16],
-                        color4: item[17],
-                        yiId: item[20] + '/' + item[19],
-                        Tmp_Name: item[24],
-                        Huid_Name: item[25],
-                        Songd_Name: item[26],
-                        Uaug_Name: item[27],
-                        isHengwen: isHengwen,
-                        number: shebeiNumber,
-                        time: item[21],
-                        iconShow: false
+                if(res[0][0] === null ) {
+                    this.isNotData = true
+                } else {
+                    this.isNotData = false
+                    let data = res.sort((a, b) => {   // 按名字排序
+                        return (a[0].localeCompare(b[0], 'zh-Hans-CN', {sensitivity: 'accent'}))
                     })
+                    // console.log(data);
+                    for(let item of data) {
+                        // console.log(key)
+                        // console.log(item)
+                        this.rela_img = item[23]  // 背景图片
+                        let shebeiNumber;
+                        if(item[1] !== null && item[2] !== null && item[3] !== null && item[4] !== null ) {
+                            shebeiNumber = 4
+                        } else if (item[1] !== null && item[2] !== null && item[3] !== null) {
+                            shebeiNumber = 3
+                        } else if (item[1] !== null && item[2] !== null ) {
+                            shebeiNumber = 2
+                        } else {
+                            shebeiNumber = 1
+                        }
+                        // 是否是恒温恒湿机
+                        let isHengwen
+                        // let isHengwen = item[13].indexOf('恒温恒湿机') >= 0
+                        item[13] == null ? isHengwen = false : isHengwen = item[13].indexOf('恒温恒湿机') >= 0
 
+                        this.items.push({
+                            Name: item[0],
+                            UulIng: item[13],
+                            UingElecT: item[22],
+                            Top: (Number(item[11])+Number(item[12])) * 50,
+                            Left: (Number(item[9])+Number(item[10])) * 50,
+                            Tmp: item[1],
+                            Huid: item[2],
+                            Songd: item[3],
+                            Uaug: item[4],
+                            Tmp_Unit: item[5],
+                            Huid_Unit:item[6],
+                            Songd_Unit: item[7],
+                            Uaug_Unit: item[8],
+                            color1: item[14],
+                            color2: item[15],
+                            color3:item[16],
+                            color4: item[17],
+                            yiId: item[20] + '/' + item[19],
+                            Tmp_Name: item[24],
+                            Huid_Name: item[25],
+                            Songd_Name: item[26],
+                            Uaug_Name: item[27],
+                            isHengwen: isHengwen,
+                            number: shebeiNumber,
+                            time: item[21],
+                            iconShow: false
+                        })
+
+                    }
                 }
            })
        },
@@ -309,7 +318,7 @@ export default {
        getMonitoringStatis () {  // 获取监测点统计
             let params = { GROUP_ID: this.zhantingId, flag:true }
             EqmtStatistics(params).then(res => {
-                console.log(res)
+                // console.log(res)
                 this.monitoringPointNum = res[res.length - 1].PropInteger
                 this.monitoringPoint = res.slice(0, res.length-1)
             })
@@ -321,8 +330,9 @@ export default {
            })
        },
        Data_Router (idx) {
-           this.$store.commit('setLoggerSn', this.items[idx].yiId)
-        //    this.$router.push('/Analysis/DataAnalysis')
+           console.log(this.items[idx].yiId)
+           this.$store.commit('setLoggerSn', this.items[idx].yiId.split(','))
+           this.$router.push('/Analysis/DataAnalysis')
        },
        clickShowDetail (idx) {
            console.log(idx)
@@ -348,10 +358,17 @@ export default {
         this.getFractions()
         this.getMonitoringStatis()
         this.getAlermNumber()
+        let _this = this
+        setInterval(() => {
+            _this.getDataAll()
+            _this.getFractions()
+            _this.getMonitoringStatis()
+            _this.getAlermNumber()
+        }, 30000)
     },
     watch: {
         zhantingId () {
-            console.log('----')
+            // console.log('----')
             this.getDataAll()
             this.getFractions()
             this.getMonitoringStatis()
@@ -365,7 +382,7 @@ export default {
     height: 100%;
     position: relative;
     .ListContainer {
-        width: calc(100% - 190px);
+        width: calc(100% - 180px);
         height: 100%;
         position: relative;
         display: inline-block;
@@ -403,6 +420,7 @@ export default {
                 border-radius: 6px;
                 background: #fff;
                 padding: 10px 6px;
+                z-index: 99;
                 .title_img {
                     h4 {
                         display: inline-block;
@@ -522,9 +540,9 @@ export default {
             }
         }
         .showListBox {
-            width: 230px;
+            width: 228px;
             height: 130px;
-            margin: 0 15px 20px 0;
+            margin: 0 5px 20px 0;
             border-radius: 5px;
             border:1px solid #ccc;
             display: inline-block;
@@ -641,7 +659,7 @@ export default {
     }
     .switchContainer {
         position: absolute;
-        top: -55px;
+        top: -45px;
         right: 0;
     }
 }
