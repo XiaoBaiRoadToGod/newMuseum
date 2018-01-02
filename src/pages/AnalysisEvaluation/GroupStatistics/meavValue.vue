@@ -18,7 +18,7 @@
                     <el-button type="primary" @click='queryGroupFn' size='mini'>查询</el-button>       
                 </el-form-item>
                 <el-form-item style='float: right;'>
-                    
+                    <div class='myBackIcon' @click='$router.back(-1)'></div>
                 </el-form-item>
         </el-form>
       </el-col>
@@ -60,6 +60,7 @@
                 :data='item.lineData'
                 :title='item.title'
                 :tooltip='item.tooltip'
+                :extend='lineExtend'
                 :grid='grid'
                 :legend-visible='false'
             ></ve-line>
@@ -69,6 +70,7 @@
 <script>
 import { SevenDay } from '@/assets/js/commonFunc'
 import { TabMulti, GetMeanValue } from './api'
+import { mapGetters } from 'vuex'
 export default {
   data () {
       return {
@@ -95,8 +97,20 @@ export default {
             left: '20',
             right: '20'
         },
+        lineExtend: {
+            series: {
+                type: 'line',
+                symbol: 'none',
+                lineStyle: {
+                    normal: { width: '1.5'}
+                }
+            }
+        },
         chartsLineWidth: null 
       }
+  },
+  computed: {
+      ...mapGetters(['LoggerDate'])
   },
   methods: {
       queryGroupFn () {
@@ -208,6 +222,10 @@ export default {
       this.paramsSn = this.$route.params.id
   },
   mounted () {
+      if(this.LoggerDate !== null) {
+          this.startEndDate = this.LoggerDate
+          this.$store.commit('setDate', null)
+      }
       this.getMeavData()
       this.getChartWidth()
   }
@@ -215,6 +233,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .meavValueContainer {
+    .myBackIcon {
+        display: inline-block;
+        width: 30px;
+        height:20px;
+        background: url(../../../assets/img/icon1.png) no-repeat;
+        background-position: -19px -775px;
+        cursor: pointer;
+    }
     .meavTable {
        .multiTable {
             background: #fff;

@@ -173,13 +173,14 @@ import { GetGroupLoggers, addGroup, queryGroup, delateGroup,updateGroup } from '
       },
       jumpMulti(ev){
       	var el = ev.target;
-      	var sn = $(el).attr('data-sn');
+      	var sn = $(el).attr('data-sn').split(',');
       	// console.log($(el).attr('data-sn'));
-      	// console.log(this.startDate,this.endDate);
-      	this.$store.commit('STARTDATE',this.startDate);
-      	this.$store.commit('ENDDATE',this.endDate);
-      	this.$store.commit('NEWID',sn);
-      	this.$router.push('/multiDataQuery');
+				// console.log(this.startDate,this.endDate);
+				console.log(sn)
+      	this.$store.commit('setDate',this.startEndDate);
+      	
+      	this.$store.commit('setLoggerSn',sn);
+      	this.$router.push('/Analysis/DataAnalysis');
       },
       addGroup(){  // 添加分组
       	this.dialogVisible = true;
@@ -388,9 +389,6 @@ import { GetGroupLoggers, addGroup, queryGroup, delateGroup,updateGroup } from '
 	      		})
 	      	}
       	}
-      	
-      	
-      	
 
       },
       delateTab(idx){
@@ -577,36 +575,23 @@ import { GetGroupLoggers, addGroup, queryGroup, delateGroup,updateGroup } from '
         
       	
       	// }
-      },
-      windowResize(){
-        var ww = $(document).width();
-        $('.content-container').width(ww - 201 );
-        var hh = $(document).height();
-        $('.content-wrapper').css({'height':hh - 90 - 32,'overflow-y':'auto'});
-        $('#chartPie').width(320);
       }
+
     },
     mounted(){
     	// console.log(this.dataArr);
     	this.getshebeiData();
     	this.hideTable();
     	this.queryGroupFn();
-    	var _this = this;
-    	_this.windowResize();
-    	this.$store.watch(
-			function(state){
-				return state.zhantingID;
-			},function(){
-				_this.getshebeiData();
-				_this.queryGroupFn();
-			},{
-				deep:true
-		});
-		window.onresize = function(){  
-        _this.windowResize();
-    }
-}
-  };
+		
+		},
+		watch: {
+			zhantingId () {
+				this.getshebeiData();
+				this.queryGroupFn();
+			}
+		}
+  }
 </script>
 <style scoped lang='scss' >
 	.titltShow{
