@@ -3,7 +3,7 @@
 	<div class='listContainer'>
 		<div class='myAir' v-for='(item, index) in dataList' :key='index'>
 			<div class='airContainer'  v-if='item.VER_ID == 17' >
-				<div class='airTitle'>
+				<div class='airTitle' :style='{background: primaryColor}'>
 					<p >通讯状态：{{ item.DDC }}</p>
 					<span>{{ item.iName }}</span>
 				</div>
@@ -60,27 +60,25 @@
 						</div>
 					</div>
 					<div class="alermBtn positonAb" >
-						<div class='myAlermBtn airSupplyAlerm' :style='{background: item.compress}'>
+						<div class='myAlermBtn airSupplyAlerm' :style='{background: item.compress == "正常" ? primaryColor : item.compress}'>
 							送风阀报警
 						</div>
-						<div class='myAlermBtn returnAirSegAlerm' :style='{background: item.mainBlower}'>
+						<div class='myAlermBtn returnAirSegAlerm' :style='{background: item.mainBlower == "正常" ? primaryColor : item.mainBlower}'>
 							回风阀报警
 						</div>
-						<div class='myAlermBtn pressureSegAlerm' :style='{background: item.differential}'>
+						<div class='myAlermBtn pressureSegAlerm' :style='{background: item.differential == "正常" ? primaryColor : item.differential}'>
 							压差报警
 						</div>
-						<div class='myAlermBtn fanFailureAlerm' :style='{background: item.HWater}'>
+						<div class='myAlermBtn fanFailureAlerm' :style='{background: item.HWater == "正常" ? primaryColor : item.HWater}'>
 							风机故障报警
 						</div>
-						<div class='myAlermBtn airValueAlerm' :style='{background: item.freshPolice}'>
+						<div class='myAlermBtn airValueAlerm' :style='{background: item.freshPolice == "正常" ? primaryColor : item.freshPolice}'>
 							新风阀报警
 						</div >
 
 						<div class='switch'>
 							开关机： <el-switch
 									v-model="item.switch"
-									on-color="#438eb9"
-									off-color="#a63830"
 									size='mini'
 									:width='50'
 									@change='switchChange($event, item.loggersn, index)'
@@ -92,8 +90,8 @@
 				<div class='airFooter '>
 					<span class='data'>{{item.iTime}}</span>
 				</div>
-			</div><div class='airContainer typeContainer' v-if='item.VER_ID == 18' >
-				<div class='airTitle'>
+			</div><div class='airContainer typeContainer' v-if='item.VER_ID == 18'  >
+				<div class='airTitle' :style='{background: primaryColor}'>
 					<span class='type' >调控模式：{{item.Freshair}}</span><span class='name' >{{item.iName}}</span>
 				</div>
 				<div class='airContent type1Background'>
@@ -105,8 +103,8 @@
 					<div class='clickSetContainer positonAb'>
 						<div class='backFanTemp'  @click='setValue($event, item.loggersn, index, "回风机温度")' >
 							<span class='name' >回风机温度设定：{{ item.Temp }}</span><span>℃</span>
-						</div >
-						<div class='backFanHumi'@click='setValue($event, item.loggersn, index, "回风机湿度")' >
+						</div>
+						<div class='backFanHumi' @click='setValue($event, item.loggersn, index, "回风机湿度")' >
 							<span class='name'>回风机湿度设定：{{item.Humi}}</span>%
 						</div>
 					</div>
@@ -123,14 +121,12 @@
 						<div class='myAlermBtn fanFailureAlerm' :style='{background: item.HWater}'>
 							历史数据
 						</div> -->
-						<div class='myAlermBtn airValueAlerm alermInfo' @click='showAlermInfo(item)'>
+						<div :style='{background: primaryColor}' class='myAlermBtn airValueAlerm alermInfo' @click='showAlermInfo(item)'>
 							故障信息
 						</div >
 						<div class='switch'>
 							开关机： <el-switch
 									v-model="item.switch"
-									on-color="#438eb9"
-									off-color="#a63830"
 									size='mini'
 									:width='50'
 									@change='switchChange($event, item.loggersn, index)'
@@ -229,6 +225,7 @@
 
 <script>
   import { GetAirControlDetails, ControlsSet } from './api'
+  import { mapGetters } from 'vuex'
 	export default {
 		data () {
 			return {
@@ -288,6 +285,9 @@
 				airInfoNormal: 'url(../../../static/img/airInfoNormal.png) no-repeat'
 			}
 		},
+		computed: {
+			...mapGetters(['primaryColor'])
+		},
 		methods: {
 			switchBtn(switchNum, switchState){
 				if(switchNum == 0){
@@ -312,7 +312,7 @@
 				var _this = this;
 				let user = JSON.parse(sessionStorage.getItem('user'));
 				console.log(user)
-				if(user.name == 'admin'){
+				if(user.level == 120){
 					if(text == '新风阀设定'){
 						console.log('新风阀');
 						
@@ -646,7 +646,7 @@
 							airValueOpening: res[idx].Freshair, // 新风阀开度
 							returnTemp: res[idx].ReturnT,       // 回风温度
 							returnHumi: res[idx].ReturnH,       // 回风湿度
-							differential: res[idx].VER_ID == 17 ? (res[idx].Differential  == '正常' ? '#438eb9' : '#a63830') : res[idx].Differential, // 压差报警   18送风机过载
+							differential: res[idx].VER_ID == 17 ? (res[idx].Differential  == '正常' ? '正常' : '#a63830') : res[idx].Differential, // 压差报警   18送风机过载
 							differentialIcon: res[idx].Differential  == '正常' ? this.airNomal : this.airAlerm,
 							cooling: res[idx].Cooling,           // 制冷阀开度   18 送风机风压保护
 							thermal: res[idx].Thermal,           // 加热阀开度   18 火灾信号连锁保护
@@ -660,10 +660,10 @@
 							temp: res[idx].Temp,                 // 设定温度
 							humi: res[idx].Humi,                  // 设定湿度
 							fresh: res[idx].Fresh,                // 新风阀设定值  18 送风机过滤压差开关
-							compress: res[idx].VER_ID == 17 ? (res[idx].CompressO == '正常' ? '#438eb9' : '#a63830') : res[idx].CompressO,          // 送风阀报警   18 压缩机1高压保护
-							mainBlower: res[idx].VER_ID == 17 ? (res[idx].MainBlowerO == '正常' ? '#438eb9' : '#a63830') : res[idx].MainBlowerO,      // 回风阀报警   18 压缩机1低压保护
-							HWater: res[idx].VER_ID ==17 ? (res[idx].HWater == '正常' ? '#438eb9' : '#a63830') : res[idx].HWater,              // 风机故障报警   18 压缩机2 过载
-							freshPolice: res[idx].VER_ID ==17 ? (res[idx].FreshPolice == '正常' ? '#438eb9' : '#a63830') : res[idx].FreshPolice,    // 新风阀报警 18 冷凝风2过载
+							compress: res[idx].VER_ID == 17 ? (res[idx].CompressO == '正常' ? '正常' : '#a63830') : res[idx].CompressO,          // 送风阀报警   18 压缩机1高压保护
+							mainBlower: res[idx].VER_ID == 17 ? (res[idx].MainBlowerO == '正常' ? '正常' : '#a63830') : res[idx].MainBlowerO,      // 回风阀报警   18 压缩机1低压保护
+							HWater: res[idx].VER_ID ==17 ? (res[idx].HWater == '正常' ? '正常' : '#a63830') : res[idx].HWater,              // 风机故障报警   18 压缩机2 过载
+							freshPolice: res[idx].VER_ID ==17 ? (res[idx].FreshPolice == '正常' ? '正常' : '#a63830') : res[idx].FreshPolice,    // 新风阀报警 18 冷凝风2过载
 							switch: this.switchBtn(res[idx].Switch, res[idx].SwitchState),
 							  
 							DiffPolice: res[idx].DiffPolice,    // 压差机段  18 压缩机2高压保护
@@ -720,6 +720,7 @@
 			display: inline-block;
 			margin-right: 10px;
 			margin-bottom: 10px;
+			background: #fff;
 			.airTitle {
 				height: 40px;
 				border-radius: 10px 10px 0 0;
