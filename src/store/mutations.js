@@ -12,5 +12,8 @@ export const setPrimaryColor = (state, value) => {
     state.PrimaryColor = value
 }
 export const setDate = (state, date) => {
-    state.loggerDate = date;
+    state.loggerDate = date
+}
+export const setAllZhanting = (state, data) => {
+    state.allZhanting = data
 }
