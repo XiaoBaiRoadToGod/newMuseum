@@ -15,6 +15,7 @@ html, body {
             .el-menu-item, .el-submenu .el-submenu__title {
                 height: 50px;
                 line-height: 50px;
+                font-size: 16px;
             }
             
         }
@@ -25,19 +26,27 @@ html, body {
     }
     .mainContainer {
         padding: 10px 20px;
-        background-color: #d7dbde;
+        background-color: #fff;
     }
 }
 //
-.zhantingMenu .el-submenu {
-    .el-submenu__title{
-        border-bottom: 1px solid #e2e2e2;
-        color: #4b6eaa;
-        font-size: 18px;
-        text-align: center;
-    }
-    .el-menu-item {
-        border-bottom: 1px solid #d5d5d5;
+.zhantingMenu { 
+    padding-top: 10px;
+    .el-submenu {
+        // opacity: 0.8;
+        .el-submenu__title{
+            border-bottom: 1px solid #e2e2e2;
+            color: #fff;
+            font-size: 18px;
+            // text-align: center;
+            background-color: rgba(0,0,0,0); // 替换element的hover事件
+            .el-submenu__icon-arrow.el-icon-arrow-down {
+                color: #fff;
+            }
+        }
+        .el-menu-item {
+            border-bottom: 1px solid #d5d5d5;
+        }
     }
 } 
 // 
@@ -67,10 +76,11 @@ html, body {
 
 // 分页
 .myPagination {
-    height: 32px;
-    line-height: 32px;
+    height: 42px;
+    // line-height: 32px;
+    padding: 5px 0;
     margin: 10px 0;
-    // background: #eff3f8;
+    background: #eff3f8;
     .el-pagination {
         float: right;
     }
@@ -93,4 +103,75 @@ html, body {
 //  日期框宽度
 .el-date-editor--daterange.el-input, .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
     width: 310px;
+}
+
+// 无数据
+.isNotDataText {
+    text-align: center;
+    padding-top: 50px;
+    color: #666;
+}
+// 隐藏仪器
+
+
+// input type=number
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button{
+    -webkit-appearance: none !important;
+    margin: 0; 
+}
+input[type="number"]{-moz-appearance:textfield;}
+
+// 验证码
+#verCode .cerify-code-panel{
+    .verify-code {
+        display: inline-block;
+        // border:none;
+    }
+    .verify-code-area {
+        display: inline-block;
+        width: 145px;
+        // float: right;
+        .verify-change-area {
+            line-height: 18px;
+        }
+        .verify-input-area {
+            .varify-input-code {
+                width: 61%;
+                outline: none;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                padding-left: 45px;
+                background: #fff no-repeat;
+                background-image: url(../img/icon1.png);
+                background-position: 0px -1040px;
+            }
+        }
+    }
+}
+
+.Loginfrom {
+    .el-form-item {
+        position: relative;
+        .errorText {
+            color: red;
+            position: absolute;
+            top: 30px;
+            height: 20px;
+            left: 0;
+        }
+    }
+    
+
+    .loginInput input{
+        background: #fff no-repeat;
+        background-image: url(../img/icon1.png);
+        padding-left: 45px;
+    }
+    .UserName input{
+        background-position: 0px -940px;
+    }
+    .UserPwd input{
+        background-position: 0px -990px;
+    }
 }
