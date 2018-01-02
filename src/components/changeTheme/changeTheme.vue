@@ -1,6 +1,12 @@
 <template>
 <el-row class='changeThemeContainer'>
-    <span class='title' @click='openThemeDialog'>切换主题色</span>
+    <!-- <span class='title' @click='openThemeDialog'>切换主题色</span> -->
+    <span  class='title'>切换主题色</span>
+    <el-switch v-model='switchColors' 
+    active-color="#438eb9"
+    @change='SwitchColor'
+    inactive-color="#365887">
+    </el-switch>
     <el-dialog
         :visible.sync="themeDialogVisible"
         width='400px'
@@ -33,7 +39,8 @@ export default {
             },
             originalStyle: '',
             // primaryColor: null,
-            themeDialogVisible: false
+            themeDialogVisible: false,
+            switchColors: true
       }
     },
     computed: {
@@ -52,8 +59,18 @@ export default {
             this.colors = objectAssign({}, this.colors, generateColors(this.colors.primary))
             this.writeNewStyle()
         },
+        SwitchColor () {
+            if(this.switchColors) {
+                this.colors.primary = '#365887'
+                this.changeThemeFunc()
+            } else {
+                this.colors.primary = '#438eb9'
+                this.changeThemeFunc()
+            }
+            
+        },
         changeThemeFunc () {
-            this.themeDialogVisible = false
+            // this.themeDialogVisible = false
             this.$store.commit('setPrimaryColor', this.colors.primary)
             // this.primaryColor = this.colors.primary
             this.colors = objectAssign({}, this.colors, generateColors(this.colors.primary))
@@ -146,6 +163,7 @@ export default {
     margin-right: 20px;
     .title{
         color: #fff;
+        margin-right: 10px;
     }
     .el-dialog__wrapper .dialog-footer {
         text-align: center;
