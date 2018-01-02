@@ -26,7 +26,7 @@
                     </el-form>
                 </span>
                 <!-- 展柜大型恒湿机 -->
-                <div class='loggerState statePadding' v-if='stateData.VER_ID == 12'>
+                <div class='loggerState ' v-if='stateData.VER_ID == 12'>
                     <span class='StateText'>压缩机高压:</span><span class='stateImg'><img :src="stateData.CompressH " ></span>
                     <span class='StateText'>高水位开关:</span><span class='stateImg'><img :src="stateData.HWater " ></span>
                     <span class='StateText'>送风机过载:</span><span class='stateImg'><img :src="stateData.MainBlowerO " ></span>
@@ -45,14 +45,15 @@
                     <span class='StateText'>漏水断水电磁阀:</span><span class='stateImg'><img :src="stateData.OutFlood " > </span>
                 </div>
                 <span class='setState' v-if='stateData.VER_ID == 12' >
-                    <el-form :model='setForm' :rules='formRules' ref='setFormRef' >
+                    <el-form :model='setForm' :rules='formRules' ref='setFormRef' style='width:45%;display: inline-block;' >
                         <el-form-item :label='"当前湿度是" + stateData.LOGS_CHTWO + "%，请设置湿度"' prop='setHumi'>
                             <el-input v-model.number='setForm.setHumi' size='mini'  ></el-input>
                         </el-form-item>
-                        <template>
-                            <div class='myResetWarning' @click='alermReset' :style='{background: primaryColor, float: "right"}'>预警复位</div>
-                        </template>
+                        
                     </el-form>
+                    <template>
+                        <div class='myResetWarning' @click='alermReset' :style='{background: primaryColor, float: "right"}'>预警复位</div>
+                    </template>
                 </span>
                 <!-- 加湿除湿净化一体机 -->
                 <div class='loggerState' v-if='stateData.VER_ID == 13'>
@@ -77,15 +78,76 @@
                     <span class='StateText'>排水泵:</span><span class='stateImg'><img :src="stateData.OutFlood " ></span>
                 </div>
                 <span class='setState' v-if='stateData.VER_ID == 13' >
-                    <el-form :model='setForm' :rules='formRules' ref='setFormRef' >
-                        <el-form-item label="加湿设置" prop='setHumi'>
-                            <p>上限:</p>
-                            <el-input v-model.number='setForm.setHumi' size='mini'  ></el-input>
+                    <div class='jiashijiSetValue' style='width:33%'>
+                        <p>除湿设置</p>
+                        <el-form inline :model='setForm' :rules='formRules'>
+                            <el-form-item prop='setDehumiCeling'>
+                                <span>上限:</span>
+                                <el-input v-model.number='setForm.setDehumiCeling' type='number' size='mini' ></el-input>
+                                
+                            </el-form-item>
+                            <el-form-item prop='setDehumiFloor'>
+                                <span>下限:</span>
+                                <el-input v-model.number='setForm.setDehumiFloor' type='number' size='mini' ></el-input>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                    <div class='jiashijiSetValue' style='width:33%'>
+                        <p>加湿设置</p>
+                        <el-form inline :model='setForm' :rules='formRules'>
+                            <el-form-item prop='setAddHumiCeling'>
+                                <span>上限:</span>
+                                <el-input v-model.number='setForm.setAddHumiCeling' type='number' size='mini' ></el-input>
+                                
+                            </el-form-item>
+                            <el-form-item prop='setAddHumiFloor'>
+                                <span>下限:</span>
+                                <el-input v-model.number='setForm.setAddHumiFloor' type='number' size='mini' ></el-input>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                    <div class='jiashijiSetValue' style='width:30%'>
+                        <div class='myResetWarning' @click='alermReset' :style='{background: primaryColor, float: "right"}'>预警复位</div>
+                    </div>
+                </span>
+                <!-- 汉唐恒湿机 -->
+                <div class='loggerState statePadding' v-if='stateData.VER_ID == 15'>
+                    <span class='StateText'>水位状态:</span>
+                    <span class='stateImg' :style='{color:stateData.CompressO == "低温" ? "#ea9706" : "#419700"}'>{{stateData.CompressO}} </span>
+                </div>
+                <span class='setState' v-if='stateData.VER_ID == 15'>
+                    <el-form :model='setForm' :rules='formRules'>
+                        <el-form-item :label='"当前湿度是"+stateData.LOGS_CHTWO+"%,请设置湿度"' prop='setHumi'>
+                            <el-input v-model.number='setForm.setHumi' type='number' size='mini'></el-input>
                         </el-form-item>
-                        <template >
-                            <div class='myResetWarning' @click='alermReset' :style='{background: primaryColor, float: "right"}'>预警复位</div>
-                        </template>
                     </el-form>
+                </span>
+                <div class='loggerState statePadding' v-if='stateData.VER_ID == 16'>
+                    <span class='StateText'>水箱状态:</span><span class='stateImg'>{{stateData.CompressO}}</span>
+                    <span class='StateText'>风机状态:</span><span class='stateImg'>{{stateData.MainBlower}}</span>
+                    <span class='StateText'>除湿状态:</span><span class='stateImg'>{{stateData.CompressH}}</span>
+                    <span class='StateText'>加湿状态:</span><span class='stateImg'>{{stateData.CompressH}}</span>
+                    <span class='StateText'>漏水报警:</span><span class='stateImg'><img :src="stateData.AlarmState " ></span>
+                </div>
+                <span class='setState' v-if='stateData.VER_ID == 16'>
+                    <div class='jiashijiSetValue' style='width:49%'>
+                        <p>除湿</p>
+                        <el-form inline :model='setForm' :rules='formRules'>
+                            <el-form-item prop='setDehumiCeling'>
+                                <span>设点:</span>
+                                <el-input v-model.number='setForm.setDehumiCeling' type='number' size='mini' ></el-input>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                    <div class='jiashijiSetValue' style='width:49%'>
+                        <p>加湿</p>
+                        <el-form inline :model='setForm' :rules='formRules'>
+                            <el-form-item prop='setDehumiFloor'>
+                                <span>设点:</span>
+                                <el-input v-model.number='setForm.setDehumiFloor' type='number' size='mini' ></el-input>
+                            </el-form-item>
+                        </el-form>
+                    </div>
                 </span>
             </template>
         </div>
@@ -127,13 +189,16 @@ export default {
             setDehumiCeling: null,  // 除湿上限
             setDehumiFloor: null,   // 除湿下限
             setAddHumiCeling: null,  // 加湿上限
-            setAddHumiFloor: null,    // 加湿下限
+            setAddHumiFloor: null    // 加湿下限
           },
           formRules: {
-              setHumi: [
-                //   { type: 'float', required: true, message: '请输入正确的数值', trigger: 'blur' }
-                  { validator: checkNumber, trigger: 'blur' }
-              ]
+              setHumi: [ { validator: checkNumber, trigger: 'blur' } ],
+              setTemp: [ { validator: checkNumber, trigger: 'blur' } ],
+              setHumiOffset: [ { validator: checkNumber, trigger: 'blur' } ],
+              setDehumiCeling: [ { validator: checkNumber, trigger: 'blur' } ],
+              setDehumiFloor: [ { validator: checkNumber, trigger: 'blur' } ],
+              setAddHumiCeling: [ { validator: checkNumber, trigger: 'blur' } ],
+              setAddHumiFloor: [ { validator: checkNumber, trigger: 'blur' } ]
           }
           
       }
@@ -150,24 +215,53 @@ export default {
           this.setState = false
       },
       stateInfoOk () {
-          this.$refs['setFormRef'].validate((valid) => {
-              if(valid) {
-                  switch (this.stateData.VER_ID) {
-                      case value:
-                          
-                          break;
-                  
-                      default:
-                          break;
-                  }
-              }else {
-                  return false
-              }
-          })
-          this.setState = true
+          
+            switch (this.stateData.VER_ID) {
+                case 11 || 12 || 15:
+                    var params = {type: 'One', sn: this.stateData.LoggerSN, strVal1: eval(Number(this.setForm.setHumi)), strVal2:'',strVal3:'',strVal4:'',strVal5:'',strVal6:''}
+                    ControlsSet(params).then(res => {
+                        if(res == '200') {
+                            this.openWarningMessgae('success', '设置成功！！！')
+                            this.$emit('refreshData')
+                        } else {
+                            this.openWarningMessgae('error', '设置失败！！！')
+                        }
+                    })
+                    
+                    break;
+                case 13:
+                    var params = {type: 'Three', sn: this.stateData.LoggerSN, strVal1: eval(Number(this.setForm.setDehumiCeling)), strVal2:eval(Number(this.setForm.setDehumiFloor)),strVal3:eval(Number(this.setForm.setAddHumiCeling)),strVal4:eval(Number(this.setForm.setAddHumiFloor)),strVal5:'',strVal6:''}
+                    ControlsSet(params).then(res => {
+                        if(res == '200') {
+                            this.openWarningMessgae('success', '设置成功！！！')
+                            this.$emit('refreshData')
+                        } else {
+                            this.openWarningMessgae('error', '设置失败！！！')
+                        }
+                    })
+                    break;
+                case 16:
+                    var params = {type: 'Three', sn: this.stateData.LoggerSN, strVal1: eval(Number(this.setForm.setDehumiCeling)), strVal2:eval(Number(this.setForm.setDehumiFloor)),strVal3:'',strVal4:'',strVal5:'',strVal6:''}
+                    ControlsSet(params).then(res => {
+                        if(res == '200') {
+                            this.openWarningMessgae('success', '设置成功！！！')
+                            this.$emit('refreshData')
+                        } else {
+                            this.openWarningMessgae('error', '设置失败！！！')
+                        }
+                    })
+                    break;
+                case 17:
+
+                    break;
+                default:
+                    break;
+            }
+
+        //   this.setState = true
       },
       alermReset () {  // 预警复位
-      let _this = this
+        let _this = this
         let params = { type: 'Reset', sn: this.stateData.LoggerSN, strVal1:'',strVal2:'',strVal3:'',strVal4:'',strVal5:'',strVal6:'' }
         ControlsSet(params).then(res => {
             if (res == '200') {
@@ -176,6 +270,12 @@ export default {
                 openWarningMessage('error', '设置失败!!!', _this)
             }
         })
+      },
+      openWarningMessgae (type, msg) {
+          return this.$message({
+              type: type,
+              message: msg
+          })
       }
   },
   mounted () {
@@ -188,7 +288,15 @@ export default {
   watch: {
       stateData () {
           console.log(this.stateData)
-          this.setForm.setHumi = this.stateData.Humidity
+          this.setForm = {
+                setTemp: this.stateData.Temperature,          // 设置温度
+                setHumi: this.stateData.Humidity,          // 设置湿度
+                setHumiOffset: this.stateData.HumiDevi,    // 设置湿度偏差
+                setDehumiCeling: this.stateData.Dehumidifys,  // 除湿上限
+                setDehumiFloor: this.stateData.Dehumidifyx,   // 除湿下限
+                setAddHumiCeling: this.stateData.Difications,  // 加湿上限
+                setAddHumiFloor: this.stateData.Dificationx 
+          }
       }
   }
 }
@@ -198,6 +306,7 @@ export default {
     .el-dialog .StateInfoContent{
         height: 100%;
         .loggerState {
+            padding-left: 20px;
             img {
                 vertical-align: middle;
             }
@@ -210,16 +319,19 @@ export default {
                 width: 120px;
             }
             .stateImg {
-                width: 90px;
+                width: 40px;
                 color: #419700;
                 text-align: center;
                 
             }
         }
-        .setState .el-form{
-            .el-form-item {
-                width: 45%;
-                display: inline-block;
+        .setState {
+            display: block;
+            padding-top: 10px;
+            .el-form{
+                .el-form-item {
+                    margin-bottom: 10px;
+                }
                 
             }
             .myResetWarning {
@@ -231,10 +343,25 @@ export default {
                 padding: 10px 17px;
                 cursor: pointer;
             }
+            .jiashijiSetValue {
+                display: inline-block;
+                p {
+                    margin-bottom: 0;
+                }
+                .el-form-item {
+                    .el-input {
+                        width: 75%;
+                    }
+                }
+            }
 
         }
         .statePadding {
-            padding: 0 40px 20px 60px;
+            padding: 0 60px 20px 60px;
+            .stateImg {
+                width: 90px;
+            }
+            
         }
         
     }

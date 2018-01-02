@@ -5,7 +5,7 @@
         :data='controlTableData'
         stripe
         center
-        style='width: 100%'>
+        style='width: 100%; border: 1px solid #ddd;'>
         <el-table-column prop='LOGGER_NAME' label='名称' min-width='120'></el-table-column>
         <el-table-column prop='Device' label='设备类型' min-width='140'></el-table-column>
         <!-- <el-table-column prop='SPosition' label='安装位置'></el-table-column> -->
@@ -34,7 +34,7 @@
         <el-table-column label='操作' min-width='140'>
           <template slot-scope="scope">
             <el-button type="primary" size='mini' @click='setLoggerState(scope.$index)' :disabled="controlTableData[scope.$index].setBtnIsDisable"  >设置</el-button>
-            <el-switch v-model='controlTableData[scope.$index].SwtichMachine' :disabled="controlTableData[scope.$index].switchIsDisable" ></el-switch>
+            <el-switch @change='setSwitch($event, scope.$index)' v-model='controlTableData[scope.$index].SwtichMachine' :disabled="controlTableData[scope.$index].switchIsDisable" ></el-switch>
           </template>
         </el-table-column>
       </el-table>
@@ -50,11 +50,11 @@
       </el-col>
       
     </el-col>
-    <show-state :stateData='dialogStateData' ref='showstate' />
+    <show-state :stateData='dialogStateData' ref='showstate' @refreshData='refreshData' />
   </el-row>
 </template>
 <script>
-import { Controls, ControlNum } from './api'
+import { Controls, ControlNum, ControlsSet } from './api'
 import { mapGetters } from 'vuex'
 import { deviceType, subDotN } from '@/assets/js/commonFunc'
 import ShowState from '@/pages/Environmental/showStateComponent'
@@ -114,6 +114,60 @@ export default {
         this.controlTableData = res
         console.log(this.controlTableData)
       })
+    },
+    refreshData () {  //设置完成后，刷新数据
+      this.getDefaultData()
+    },
+    setSwitch (event, idx) {  // 开关机
+      console.log(event)
+      let sn = this.controlTableData[idx].LoggerSN
+      if(event) {
+        this.$confirm('是否开机', {
+          type: 'warning'
+        }).then(() => {
+          var params = { type: 'KJ', sn: sn, strVal1: 1,strVal2:'',strVal3:'',strVal4:'',strVal5:'',strVal6:''}
+          ControlsSet(params).then(res => {
+            if(res == 200) {
+              this.$message({
+                type: 'success',
+                message: '开机成功！！！'
+              })
+              this.getDefaultData()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '开机失败！！！'
+              })
+              this.controlTableData[idx].SwtichMachine = !this.controlTableData[idx].SwtichMachine
+            }
+          })
+        }).catch(() => {
+          this.controlTableData[idx].SwtichMachine = !this.controlTableData[idx].SwtichMachine
+        })
+      } else {
+        this.$confirm('是否关机', {
+          type: 'warning'
+        }).then(() => {
+          var params = {type: 'GJ', sn: sn, strVal1: 0,strVal2:'',strVal3:'',strVal4:'',strVal5:'',strVal6:''};
+          ControlsSet(params).then(res => {
+            if(res == 200) {
+              this.$message({
+                type: 'success',
+                message: '关机成功！！！'
+              })
+              this.getDefaultData()
+            } else {
+              this.$message({
+                type: 'error',
+                message: '关机失败！！！'
+              })
+              this.controlTableData[idx].SwtichMachine = !this.controlTableData[idx].SwtichMachine
+            }
+          })
+        }).catch(() => {
+          this.controlTableData[idx].SwtichMachine = !this.controlTableData[idx].SwtichMachine
+        })
+      }
     },
     setBtnIsDisable (num) {   // 设置按钮是否禁用
       var user = JSON.parse(sessionStorage.getItem('user'));
@@ -202,6 +256,10 @@ export default {
   },
   mounted () {
     this.getDefaultData()
+    let _this = this
+    setInterval(() => {
+      _this.getDefaultData()
+    }, 30000)
   },
   watch: {
     zhantingId () {
