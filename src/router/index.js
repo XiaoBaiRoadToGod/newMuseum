@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
 import Login from '@/components/Login'
+import state from '../store/rootState'
 
 import RouterView from '@/pages/router-view'
 
@@ -64,7 +65,9 @@ export default new Router({
         {
           path: "RealTimeMonitoring",
           name: "RealTime",
+          iconCls: 'fa icon_img_lt_01',
           component: RealTimeMonitoring,
+          isHidden: state.showPage.showReal,
           meta: {
             title: "实时监测"
           }
@@ -73,6 +76,8 @@ export default new Router({
           path: "Environmental",
           name: "Environmental",
           component: Environmental,
+          iconCls: 'fa icon_img_lt_02',
+          isHidden: state.showPage.showEnvir,
           meta: {
             title: "环境调控"
           }
@@ -81,6 +86,8 @@ export default new Router({
           path: "AirControl",
           name: "AirControl",
           component: AirControl,
+          iconCls: 'fa icon_img_lt_air',
+          isHidden: state.showPage.showAir,
           meta: {
             title: "空调调控"
           }
@@ -89,6 +96,8 @@ export default new Router({
           path: "Warning",
           name: "Warning",
           component: RouterView,
+          iconCls: 'fa icon_img_lt_03',
+          isHidden: state.showPage.showAlerm,
           meta: {
             title: "预警平台"
           },
@@ -111,6 +120,7 @@ export default new Router({
           path: "Analysis",
           name: "Analysis",
           component: RouterView,
+          iconCls: 'fa icon_img_lt_04',
           meta: {
             title: "分析评估"
           },
@@ -119,18 +129,21 @@ export default new Router({
               path: "HistoryData",
               name: "HistoryData",
               component: HistoryData,
+              isHidden: state.showPage.showHistory,
               meta: { title: "历史数据" }
             },
             {
               path: "DataAnalysis",
               name: "DataAnalysis",
               component: DataAnalysis,
+              isHidden: state.showPage.showAnalysis,
               meta: { title: "数据分析" }
             },
             {
               path: "GroupStatistics",
               name: "GroupStatistics",
               component: GroupStatistics,
+              isHidden: state.showPage.showGroup,
               meta: { title: "分组统计" }
             },
             {
@@ -138,11 +151,12 @@ export default new Router({
               name: "MeavValue",
               component: MeavValue,
               isHidden: true,
-              meta: { title: '平均值' }
+              meta: { title: "平均值" }
             },
             {
               path: "Comprehensive",
               name: "Comprehensive",
+              isHidden: state.showPage.showComprehen,
               component: Comprehensive,
               meta: { title: "综合评估" }
             },
@@ -150,20 +164,43 @@ export default new Router({
               path: "TheMemo",
               name: "TheMemo",
               component: TheMemo,
+              isHidden: state.showPage.showMemoPage,
               meta: { title: "备忘录" }
             },
             {
               path: "HeatField",
               name: "HeatField",
               component: HeatField,
+              isHidden: state.showPage.showHeatField,
               meta: { title: "热量场" }
             }
           ]
         },
         {
+          path: "CulturalRelics",
+          name: "CulturalRelics",
+          component: CulturalRelics,
+          iconCls: 'fa icon_img_lt_05',
+          isHidden: state.showPage.showRelic,
+          meta: {
+            title: "展陈文物"
+          }
+        },
+        {
+          path: "RelicDetails/:id",
+          name: "RelicDetails",
+          component: RelicsDetails,
+          isHidden: true,
+          meta: {
+            title: "文物详情"
+          }
+        },
+        {
           path: "Overview",
           name: "Overview",
           component: Overview,
+          iconCls: 'fa icon_img_lt_11',
+          isHidden: state.showPage.showOverview,
           meta: {
             title: "概览"
           }
@@ -187,6 +224,7 @@ export default new Router({
           path: "HiddenLogger",
           name: "HiddenLogger",
           component: HiddenLogger,
+          isHidden: state.showPage.showHiddenLogger,
           meta: {
             title: "隐藏仪器"
           }
@@ -195,6 +233,7 @@ export default new Router({
           path: "RelicsInfo",
           name: "RelicsInfo",
           component: RelicsInfo,
+          isHidden: state.showPage.showUploadImg,
           meta: {
             title: "导入文物信息"
           }
@@ -203,6 +242,7 @@ export default new Router({
           path: "RelicsImg",
           name: "RelicsImg",
           component: RelicsImg,
+          isHidden: state.showPage.showUploadImg,
           meta: {
             title: "导入文物图片"
           }
