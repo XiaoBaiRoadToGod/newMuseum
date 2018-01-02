@@ -16,7 +16,14 @@
             </el-col>
             <el-col :span='24' class='rightWarning bottomLineWarning'>
               <p class='chartTitle'>24小时报警曲线图</p>
-              <ve-line :data='LineChartData' height='calc(100% - 30px)'  :settings='LineChartDataSet' :grid='grid' :legend-visible='false'></ve-line>
+              <ve-line :data='LineChartData' 
+              height='calc(100% - 30px)'  
+              :settings='LineChartDataSet' 
+              :xAxis='LinexAxis'
+              :yAxis='lineyAxis'
+              :grid='grid' 
+              :extend='lineExtend'
+              :legend-visible='false'></ve-line>
             </el-col>
           </el-col>
         </el-row>
@@ -50,12 +57,34 @@ export default {
       LineChartDataSet: {
         metrics: [ '数量'],
         dimension: ['时间']
+        
+      },
+      lineExtend: {
+          series: {
+              type: 'line',
+              symbol: 'none',
+              lineStyle: {
+                  normal: { width: '1.5'}
+              }
+          }
       },
       LinexAxis: {
-        type: 'category',
-        splitNumber: 6,
-        splitLine:{show:false},
-				boundaryGap:true,
+        type:'category',
+        data:[],
+        axisLine: {
+          show: true
+        },
+        axisTick:{
+          show: true
+        }
+      },
+      lineyAxis: {
+        axisLine: {
+          show: true
+        },
+        axisTick:{
+          show: true
+        }
       },
       barChartData: {
         columns: ['type','数量'],
@@ -142,7 +171,8 @@ export default {
         console.log(res)
         this.LineChartData.rows = []
         let dateArray= ['00:00', '02:00',  '04:00', '06:00', '08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00']
-        for(let i = 0; i < res.length; i++) {
+       this.LinexAxis.data = dateArray
+       for(let i = 0; i < res.length; i++) {
           // console.log(dateArray[i])
           this.LineChartData.rows.push({
             '时间': dateArray[i],

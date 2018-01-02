@@ -5,6 +5,7 @@
       <el-table
         style='width: 100%'
         stripe
+        border
         :data='tableListData'>
         <el-table-column prop='monitoring' label='监测点' ></el-table-column>
         <el-table-column prop='instrument' label='仪器名称' ></el-table-column>
