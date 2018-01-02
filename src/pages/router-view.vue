@@ -1,6 +1,8 @@
 <template>
-
+<keep-alive>
   <router-view @windowReset='windowReset'/>
+</keep-alive>
+  
 
 </template>
 <script>
