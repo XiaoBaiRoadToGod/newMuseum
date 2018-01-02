@@ -23,9 +23,10 @@ Vue.component(VePie.name, VePie)
 Vue.component(VeBar.name, VeBar)
 Vue.component(VeRing.name, VeRing)
 Vue.use( VeTitle)
-// echarts
-import echarts from 'echarts'
-Vue.use(echarts)
+// 二维码
+import VueQr from 'vue-qr'
+Vue.use(VueQr)
+Vue.component("vue-qr", VueQr)
 // vuex 
 import store from './store/index'
 import axios from 'axios'
@@ -33,6 +34,8 @@ import state from './store/rootState'
 // 使用滚动条组件
 import Vuebar from 'vuebar'
 Vue.use(Vuebar)
+import vuescroll from 'vue-scroll'
+Vue.use(vuescroll)
 
 Vue.prototype.$http = axios
 // console.log(this.$store)
