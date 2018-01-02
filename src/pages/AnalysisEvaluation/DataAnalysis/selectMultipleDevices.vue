@@ -1,4 +1,5 @@
 <template>
+
     <el-col :span='24' class='loggerDialogContent' v-if='isShow' >
         <div class='loggerContainer'>
           <div class='loggerTitle'>
@@ -55,6 +56,9 @@
           </div>
         </div>
     </el-col>
+
+    
+
 </template>
 <script>
 import { mapGetters } from 'vuex'
@@ -78,7 +82,7 @@ export default {
       }
   },
   computed: {
-      ...mapGetters(['zhantingId'])
+      ...mapGetters(['zhantingId', 'Loggersn', 'LoggerDate'])
   },
   methods: {
       handleCheckAllChange (ev) {  // 全选按钮
@@ -88,6 +92,7 @@ export default {
         this.isIndeterminate = false;
       },
       chooseDate (date) {  // 日期
+    //   console.log('change')
         if (date == null) {
               return false
           }
@@ -103,6 +108,7 @@ export default {
               date[1] = stopEndDate
           }
           this.startEndDate = date
+          this.$emit('changeDate', this.startEndDate)
       },
       CheckedArray (value) {  // 点击多选框
         //   console.log(value)
@@ -117,13 +123,13 @@ export default {
             openWarningMessage('error', '请选择设备!!!', _this)
         } else {
             // this.show= false
-            this.$emit('changeLogger', this.checkedProduct, this.startEndDate)
+            this.$emit('changeLogger', this.checkedProduct)
         }
         
 
       },
       closeMultiContent () {
-          console.log('dianjiguanbi ')
+        //   console.log('dianjiguanbi ')
           this.openTheDialog(false)
       },
       openTheDialog (bool) {   // 打开或关闭弹窗
@@ -150,12 +156,40 @@ export default {
           })
       }
   },
+  created () {
+      
+  },
   mounted () {
       this.getLoggerData()
+      console.log(this.startEndDate)
+      this.$emit('changeDate', this.startEndDate)
+      
   },
   watch: {
       zhantingId () {
           this.getLoggerData()
+      }
+  },
+  activated () {
+      console.log(this.Loggersn)
+      console.log(this.LoggerDate)
+      if(this.Loggersn !== null) {
+          this.checkedProduct = []
+          for(let item of this.Loggersn) {
+              this.checkedProduct.push(item)
+          }
+          this.$store.commit('setLoggerSn', null)
+          if(this.LoggerDate !== null) {
+              this.startEndDate = this.LoggerDate
+              console.log(this.startEndDate)
+              this.$emit('changeDate', this.startEndDate)
+              this.$store.commit('setDate', null)
+              
+          } else {
+              this.startEndDate = [ new Date(SevenDay(new Date())), new Date()]
+
+          }
+          this.queryData()
       }
   }
 }
