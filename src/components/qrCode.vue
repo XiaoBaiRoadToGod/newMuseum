@@ -4,7 +4,7 @@
         <el-col :span='24' class='scanCodeClose'>
           <span  @click='closeQrContent(false)'></span>
           <div class='QrCode' id='myQrCode'>
-            <vue-qr :text='GetQrCodeText' :logoSrc='QrLogoSrc' dotScale='0.5' logoMargin='5' width='230' height='230' size='230'></vue-qr>
+            <vue-qr :text='GetQrCodeText' :logoSrc='QrLogoSrc' dotScale='0.5' logoMargin='5' margin='0' width='230' height='230' size='230'></vue-qr>
             
           </div>
         </el-col>

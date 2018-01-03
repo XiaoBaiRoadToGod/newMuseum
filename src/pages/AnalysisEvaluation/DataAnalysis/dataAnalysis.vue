@@ -2,7 +2,7 @@
   <el-row class='multiDataContainer'>
       <el-col :span='24' class='multiTitle'>
         <el-form :inline='true'>
-          <el-form-item>
+          <el-form-item v-if='GetMuseumName == "国博"'>
             <el-button type="primary" size='mini' icon='el-icon-setting' @click='selectEqui = true'>{{ checkChooseName }}</el-button>
           </el-form-item>
           <el-form-item>
@@ -21,7 +21,7 @@
         </el-form>
       </el-col>
       <el-col :span='24' v-if='noData' class='isNotDataText' >
-        暂无数据
+        暂无数据, 请重新选择仪器或时间段
       </el-col>
       <el-col :span='24' v-loading='loading' element-loading-text="加载中">
         <el-col :span='24'  v-if='!noData' >
@@ -236,7 +236,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['zhantingId','primaryColor', 'GetshowMemo'])
+    ...mapGetters(['zhantingId','primaryColor', 'GetshowMemo', 'GetMuseumName'])
   },
   components:{ LoggerDialog, Memo },
   methods: {

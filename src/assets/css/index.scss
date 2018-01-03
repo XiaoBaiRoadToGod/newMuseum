@@ -16,6 +16,7 @@ html, body {
                 height: 50px;
                 line-height: 50px;
                 font-size: 16px;
+                color: #666;
             }
             
         }
@@ -23,9 +24,12 @@ html, body {
             background-color: #d7dbde;
             // border-bottom: none;
         }
+        .el-menu--horizontal .el-submenu>.el-menu {
+            top: 55px;
+        }
     }
     .mainContainer {
-        padding: 10px 20px;
+        // padding: 10px 20px;
         background-color: #fff;
     }
 }

@@ -7,7 +7,7 @@
         custom-class='helpDialog'
         :visible.sync="helpVisible">
             <a href="http://www.huato.com" target="view_window"><img class='HuatoLogoImg' src="../assets/img/LOGO1.png" alt="HUATO"></a>
-            <p>WWWRC V3.5.2.1 B001</p>
+            <p>WWWRC V2.0.0 B001</p>
             <p>Copyright 2016 版权所有</p>
             <p>深圳华图测控系统有限公司</p>
             <p>电话：+86-755-23012549</p>

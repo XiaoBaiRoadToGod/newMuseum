@@ -60,27 +60,30 @@
           <el-col :span='24' class='myBorder' v-if='overviewGroup'>
             <el-col :span='24' align='left' style='margin-bottom:10px;'>
               <span :style="{width: '50px', color: primaryColor, borderBottom: '1px solid '+ primaryColor}" class='textButton' @click='bianjiDialog = true'>编辑</span>
-              <el-dialog :visible.sync='bianjiDialog' title='添加设备' class='overViewDialog' @close="closeDialog">
+              <el-dialog width='390px' :visible.sync='bianjiDialog' title='添加设备' class='overViewDialog' @close="closeDialog">
                   <div class='checkGroup'>
                     <span class='checkTitle' style='border-bottom:1px solid #ccc'>展厅设备</span>
-                    <div class='checkList'>
-                      <el-checkbox-group v-model="checkedLoggers" @change="loggersChange">
-                        <el-checkbox v-for="city in loggers" :label="city.key" :key="city.name">{{city.name}}</el-checkbox>
-                    </el-checkbox-group>
+                    <div class='checkList' v-bar>
+                      <div>
+                        <el-checkbox-group v-model="checkedLoggers" @change="loggersChange">
+                          <el-checkbox v-for="city in loggers" :label="city.key" :key="city.name">{{city.name}}</el-checkbox>
+                        </el-checkbox-group>
+                      </div>
+                      
                     </div>
                     <span class='checkTitle' style='border-top:1px solid #ccc'> <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="AllCheckChange"></el-checkbox>共选择 {{ num }} 项</span>
                   </div>
                   <span slot="footer" class="">
-                    <el-button @click="closeDialog">取 消</el-button>
-                    <el-button type="primary" @click="okDialog">确 定</el-button>
+                    <el-button size='small' @click="closeDialog">取 消</el-button>
+                    <el-button size='small' type="primary" @click="okDialog">确 定</el-button>
                   </span>
               </el-dialog>
               <span :style="{width:'80px',color: primaryColor, borderBottom: '1px solid '+ primaryColor}" class='textButton' @click='setDate'>时间设定</span>
-              <el-dialog class='setDialog' title='请设定时间' :visible.sync='setDialog' top='40%'>
-                <div style='height:78px;line-height:78px;'>请设置时间： <input v-model='setDay' type="number" class='setInput'>  天</div>
+              <el-dialog width='390px' class='setDialog' title='请设定时间' :visible.sync='setDialog'>
+                <div style='height:78px;line-height:78px;'>请设置时间： <el-input size='mini' v-model='setDay' type="number" class='setInput'></el-input>  天</div>
                 <span slot="footer" class="footer">
-                    <el-button @click="closeDialog">取 消</el-button>
-                    <el-button type="primary" @click="okSetDialog">确 定</el-button>
+                    <el-button size='small' @click="closeDialog">取 消</el-button>
+                    <el-button size='small' type="primary" @click="okSetDialog">确 定</el-button>
                   </span>
               </el-dialog>
               <span class='overViewInput' >{{myDay}}天</span>
@@ -332,7 +335,7 @@ export default {
       for(var j = 0;j<this.loggers.length;j++){
         logg.push(this.loggers[j].key);
       }
-      this.checkedLoggers = event.target.checked ? logg : [];
+      this.checkedLoggers = event ? logg : [];
       this.num = this.checkedLoggers.length;
       this.isIndeterminate = false;
       // console.log(this.checkedLoggers)
@@ -482,10 +485,43 @@ export default {
     }
     .rightContainer {
       height: 50%;
-      
+      .myBorder.content {
+        border: 1px solid #ddd;
+      }
       .myBorder {
         background: #fff;
-        border: 1px solid #ddd;
+        
+        .setInput {
+          width: 58%;
+        }
+        .overViewDialog {
+          .el-dialog {
+            width: 390px;
+            height:468px;
+            padding: 0 28px;
+          }
+          .checkGroup {
+            width: 256px;
+            height:320px;
+            margin-top:15px;
+            border:1px solid #ccc;
+            .checkTitle{
+              display: inline-block;
+              width: 241px;
+              height:36px;
+              line-height: 36px;
+              padding-left: 15px;
+            }
+            .checkList {
+              height: 247px;
+              .el-checkbox {
+                margin-left: 15px;
+                height:30px;
+                line-height: 30px;
+              }
+            }
+          }
+        }
         .textButton{
           display: inline-block;
           height:26px;

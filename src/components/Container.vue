@@ -37,7 +37,7 @@
                         <el-menu
                         class='zhantingMenu' 
                         :default-active='String(zhantingId)'
-                        :default-openeds='["1","2","3"]'
+                        :default-openeds='defalutOpened'
                         @select='selectZhanting'
                         ref='menuRef'
                         v-if='zhantingList.length > 0'
@@ -96,7 +96,6 @@
                     <el-col :span='24' class='navMenuContainer' v-if='type == "home"'>
                     <el-menu
                         :default-active='$route.path'
-                        text-color='#333'
                         unique-opened
                         mode='horizontal'
                         router>
@@ -128,12 +127,11 @@
                 </el-col>
                 </div>
                 
-                
             </el-main>
             <helpDialog ref='openHelp'/>
             <QrCode ref='qrCode'></QrCode>
         </el-container>
-        <el-footer height='30px'>CopyRight&copy;2008-2016,深圳市华图测控系统有限公司,粤ICP备08032186号</el-footer>
+        <el-footer height='30px'>CopyRight&copy;2008-2018,深圳市华图测控系统有限公司,粤ICP备08032186号</el-footer>
     </el-container>
 </template>
 <script>
@@ -149,6 +147,7 @@ export default {
             // primaryColor: '#365887',
             ids: null,
             zhantingList: [],
+            defalutOpened: ['1','2','3'],
             defaultActive: '',
             screenWidth: new Date().getTime(),    // 监听窗口变化，默认值 时间戳 
             timer: false,
@@ -403,7 +402,7 @@ export default {
     }
     .el-aside {
         height: 100%;
-        background: #e9edf2;
+        background: #f4f4f4;
         border-right: #cdcdcd;
         background-image: url(../assets/img/pic.png);
         background-repeat: no-repeat;
@@ -446,7 +445,7 @@ export default {
         .el-menu {
             // height: 100%;
             color:#fff;
-            background: #e9edf2;
+            background: #f4f4f4;
             .el-submenu .el-menu-item {
                 background: #eef1f6;
                 height: 40px;
@@ -455,6 +454,9 @@ export default {
             }
             .el-menu-item.is-active {
                 background: #fff;
+            }
+            .el-menu-item {
+                border-bottom: 1px solid #d5d5d5;
             }
         }
     }
@@ -465,6 +467,12 @@ export default {
                 
                 .el-menu-item {
                     font-size: 16px;
+                    color: #666;
+                }
+                .el-menu-item:focus, .el-menu-item:hover {
+                    outline: 0;
+                    color: #333;
+                    background-color: rgb(235, 238, 243);
                 }
             }
         }
@@ -472,6 +480,7 @@ export default {
             height: calc(100% - 51px);
             // height: auto;
             min-height: 627px;
+            padding: 10px 20px;
         }
         .setMain { // 设置页面的main高度
             height: 100%;

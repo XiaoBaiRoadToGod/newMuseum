@@ -137,7 +137,10 @@ export default {
   },
   mounted () {
     this.getAllData()
-  }
+  },
+	deactivated(){
+		this.$destroy(true);
+	}
 }
 </script>
 <style lang="scss" scoped>

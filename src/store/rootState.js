@@ -7,8 +7,8 @@
 
 const state = {
   museumName: '南博',                             
-  httpUrl: "http://huato.net:8025/api",
-  // httpUrl: "http://192.168.10.68:8080/api",  // ip
+  // httpUrl: "http://huato.net:8025/api",
+  httpUrl: "http://192.168.10.68:8080/api",  // ip
   LoginShowVeriCode: false,            // 登录页面，验证码，true 显示
   ShowQrCode: false,              // 登录和home页面显示二维码， true 显示
   QrCodeText: null,               // 二维码文字
@@ -41,6 +41,7 @@ const state = {
 
 switch (state.museumName) {
   case "南博":
+    // state.httpUrl = "http://192.168.90.156:8080/api";
     state.LoginShowVeriCode = true;
     state.ShowQrCode = true;
     state.QrCodeText = "http://192.168.90.157:8082";
@@ -49,6 +50,7 @@ switch (state.museumName) {
     state.museumURL = "http://www.njmuseum.com/";
     break;
   case "深博":
+    // state.httpUrl = "http://172.16.50.245:8080/api";
     state.LoginShowVeriCode = true;
     state.ShowQrCode = true;
     state.QrCodeText = "http://172.16.50.245:8082";
@@ -61,6 +63,7 @@ switch (state.museumName) {
     state.museumURL = "http://www.shenzhenmuseum.com/";
     break;
   case "国博":
+    // state.httpUrl = "http://10.10.120.65:8080/api";
     state.LoginShowVeriCode = false;
     state.ShowQrCode = true;
     state.QrCodeText = "http://huato.net:8022";
@@ -72,7 +75,39 @@ switch (state.museumName) {
     state.showPage.showUploadImg = true;
     state.museumURL = "http://www.chnmuseum.cn/";
     break;
-
+  case "崇信":
+    // state.httpUrl = "http://10.185.58.16:8080/api";
+    break;
+  case "庄浪":
+    // state.httpUrl = "http://192.168.100.200:8080/api";
+    break;
+  case "陇西":
+    // state.httpUrl = "http://192.168.20.147:8080/api";
+    break;
+  case "鄂尔多斯":
+    // state.httpUrl = "http://10.1.1.209:8080/api";
+    break;
+  case "镇原":
+    // state.httpUrl = "http://192.168.1.100:8080/api";
+    break;
+  case "金昌":
+    // state.httpUrl = "http://192.168.0.117:8080/api";
+    break;
+  case "天水":
+    // state.httpUrl = "http://192.168.1.234:8080/api";
+    break;
+  case "庆城":
+    // state.httpUrl = "http://192.168.0.254:8080/api";
+    break;
+  case "绵阳":
+    // state.httpUrl = "http://192.168.1.110:8080/api";
+    break;
+  case "广东海上丝绸之路":
+    // state.httpUrl = "http://192.168.5.101:8080/api";
+    break;
+  case "安徽":
+    // state.httpUrl = "http://192.168.6.10:8080/api";
+    break;
   default:
     break;
 }

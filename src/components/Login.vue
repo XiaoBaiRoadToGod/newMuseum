@@ -13,10 +13,10 @@
           <el-col :span='9' class='Loginfrom'>
               <h3>用户登录</h3>
               <el-form label-position="left" inline :model='loginForm' :rules="LoginRules" ref='loginRef'>
-                <el-form-item prop='name'>
+                <el-form-item prop='name' :error='showError'>
                     <el-input class='loginInput UserName' size='small' v-model='loginForm.name' name='name'></el-input>
                 </el-form-item>
-                <el-form-item prop='pwd'>
+                <el-form-item prop='pwd' :error='showError'>
                     <el-input class='loginInput UserPwd' size='small' v-model='loginForm.pwd' type='password' name='pwd'></el-input>
                 </el-form-item>
                 <el-form-item v-if='GetLoginVeriCode'>
@@ -59,6 +59,7 @@ export default {
                 pwd: [ { required: true, message: '请填写密码', trigger: 'change' } ]
             },
             loginTitleImg: require('@/assets/museumImg/LoginLogo.png'),
+            showError: null,   
             loginMuseumImg: null,
             verifycation: null   // 验证是否通过，true 通过
         }
@@ -72,6 +73,7 @@ export default {
             this.$refs['qrCode'].closeQrContent(true)
         },
        onSunmit() {
+           this.showError = null
            this.$refs['loginRef'].validate((valid) => {
             //    console.log(this.verifycation)
                if(valid ) {
@@ -89,6 +91,8 @@ export default {
                             })
                             sessionStorage.setItem('user', user)
                             this.$router.push('/RealTimeMonitoring')
+                        } else {
+                            this.showError = '用户名或密码错误'
                         }
                     })
                } else {
@@ -114,6 +118,7 @@ export default {
                 },
                 success: () => {
                     console.log('验证通过')
+                    _this.showError = null
                     _this.verifycation = true
                     _this.$refs['loginRef'].validate((valid) => {
                         console.log(_this.verifycation)
@@ -132,6 +137,8 @@ export default {
                                         })
                                         sessionStorage.setItem('user', user)
                                         _this.$router.push('/RealTimeMonitoring')
+                                    } else {
+                                        _this.showError = '用户名或密码错误'
                                     }
                                 })
                         } else {

@@ -30,7 +30,9 @@
 import generateColors from './utils/color'
 import objectAssign from 'object-assign'
 import axios from 'axios'
+// import Promise from 'es6-promise-polyfill'
 import { mapGetters } from 'vuex'
+// var Promise = require('es6-promise-polyfill').Promise
 export default {
     data () {
         return {
@@ -81,18 +83,20 @@ export default {
             Object.keys(this.colors).forEach(key => {
                 cssText = cssText.replace(new RegExp('(:|\\s+)' + key, 'g'), '$1' + this.colors[key])
             })
-            let isCSS = document.getElementById('testCSS');
-            // console.log(cssText)
+            let isCSS = document.getElementById('themeCss');
+            
+            console.log(isCSS)
             if (isCSS) { // 已经添加就修改，没有添加就添加
                 isCSS.innerText = cssText
             } else {
                 const style = document.createElement('style')
-                style.setAttribute('id','testCSS')
+                style.setAttribute('id','themeCss')
                 style.innerText = cssText
                 // document.head.insertBefore(style, document.head.children[0])
                 // console.log($('head').children('style'))
-                let appendDom = $('head').children('style')[1]
-                $(appendDom).after(style)
+                // let appendDom = $('head').children('style')[1]
+                $('#theme').after(style)
+                // document.head.appendChild(style)
             }
         },
         getStyleTemplate (data) {
@@ -116,36 +120,49 @@ export default {
             return data
         },
         getIndexStyle () {
-            this.getFile('/static/theme/index.css')
+            // this.getFile('/static/theme/index.css')
             // this.getFile('//unpkg.com/element-ui/lib/theme-chalk/index.css')
-            .then(({ data }) => {
-                // console.log(data)
-                this.originalStyle = this.getStyleTemplate(data)
+            // .then(({ data }) => {
+            //     console.log(data)
+            //     this.originalStyle = this.getStyleTemplate(data)
+            // })
+            // .catch((err) => {
+            //     console.log('promiseError')
+            //     console.log(err)
+            // })
+            $.ajax({
+                type: 'GET',
+                url: '/static/theme/index.css',
+                success: (data) => {
+                    // console.log(data)
+                    this.originalStyle = this.getStyleTemplate(data)
+                }
             })
         },
         getFile (url, isBlob = false) {
+            console.log( Promise)
             return new Promise((resolve, reject) => {
                 const client = new XMLHttpRequest()
                 client.responseType = isBlob ? 'blob' : ''
                 client.onreadystatechange = () => {
-                if (client.readyState !== 4) {
-                    return
-                }
-                if (client.status === 200) {
-                    const urlArr = client.responseURL.split('/')
-                    resolve({
-                    data: client.response,
-                    url: urlArr[urlArr.length - 1]
-                    })
-                } else {
-                    reject(new Error(client.statusText))
-                }
+                    if (client.readyState !== 4) {
+                        return
+                    }
+                    if (client.status === 200) {
+                        const urlArr = client.responseURL.split('/')
+                        resolve({
+                            data: client.response,
+                            url: urlArr[urlArr.length - 1]
+                        })
+                    } else {
+                        reject(new Error(client.statusText))
+                    }
                 }
                 // console.log(url)
                 client.open('GET', url)
                 client.send()
             })
-            },
+        },
     },
     created () {
         this.getIndexStyle()

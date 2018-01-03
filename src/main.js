@@ -4,7 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
-import './assets/theme/index.css'
+// es6-promise
+// import Es6Promise from 'es6-promise'
+// Es6Promise.polyfill()
+import 'babel-polyfill'
+
+import './assets/css/verify.css'
 // import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/reset.css'
 import 'font-awesome/css/font-awesome.css'
