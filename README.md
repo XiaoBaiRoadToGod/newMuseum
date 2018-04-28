@@ -1,5 +1,6 @@
 # museum
 
+## 禁止用于商业用途
 > A Vue.js project
 
 > 文物预防性保护 环境监控系统   by 华图
